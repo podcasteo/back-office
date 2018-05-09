@@ -1,0 +1,6 @@
+{
+  "server": {
+    "port": "BACK_OFFICE_POST",
+    "host": "BACK_OFFICE_HOST"
+  }
+}

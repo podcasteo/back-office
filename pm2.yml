@@ -1,0 +1,12 @@
+apps:
+  - script: ./src/server
+    name: podcasteo-back-office-server
+    interpreter: ./node_modules/.bin/babel-node
+    exec_mode: fork_mode
+    ignore_watch :
+      - node_modules
+      - dist
+    watch:
+      - src/server
+      - src/client
+      - config
