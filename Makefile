@@ -52,7 +52,7 @@ start: ##@webapp Start everything
 	@make start-webapp
 
 start-webapp: ##@webapp Start webapp with parcel
-	@$(NODE_MODULES_BIN)/parcel watch src/client/index.js --out-dir dist/bundles
+	@$(NODE_MODULES_BIN)/parcel watch --no-autoinstall src/client/index.js --out-dir dist/bundles
 
 build-webapp: ##@webapp Build webapp with parcel
 	@$(NODE_MODULES_BIN)/parcel build src/client/index.js --out-dir dist/bundles

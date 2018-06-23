@@ -1,4 +1,9 @@
 /* eslint-disable no-console */
+import 'babel-polyfill'
+import 'isomorphic-fetch'
+
+console.log(fetch)
+
 import path from 'path'
 
 import asciify from 'asciify'

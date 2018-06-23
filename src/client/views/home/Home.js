@@ -1,31 +1,36 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
-import Button from 'material-ui/Button'
+import get from 'lodash/get'
 
 import MainLayout from 'client/components/MainLayout'
-
-const HomeTitle = styled.div`
-  color: blue;
-  font-size: 32px;
-`
+import PodcastList from 'client/components/PodcastList'
 
 class Home extends React.Component {
   static propTypes = {
-    history: PropTypes.object.isRequired,
-  }
-
-  onClick() {
-    this.props.history.push('/test')
+    podcastListPromise: PropTypes.object.isRequired,
+    // getPodcastList: PropTypes.func.isRequired,
   }
 
   render() {
+    const {
+      podcastListPromise,
+    } = this.props
+    let body
+
+    if (!podcastListPromise || podcastListPromise.pending) {
+      body = <div> Loading Podcast... </div>
+    } else if (podcastListPromise.rejected) {
+      console.log('Error loading podcast:', podcastListPromise.reason)
+      body = <div> Error loading podcast ! </div>
+    } else {
+      body = (<PodcastList
+        podcasts={get(podcastListPromise.value, 'data', [])}
+      />)
+    }
+
     return (
       <MainLayout>
-        <HomeTitle>This is HOME</HomeTitle>
-        <Button variant="raised" color="primary" onClick={() => this.onClick()}>
-          Go to test
-        </Button>
+        {body}
       </MainLayout>
     )
   }

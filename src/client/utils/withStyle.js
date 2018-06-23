@@ -1,10 +1,11 @@
 import React from 'react'
 import JssProvider from 'react-jss/lib/JssProvider'
-import blue from 'material-ui/colors/blue'
+
 import {
   createMuiTheme,
   MuiThemeProvider,
-} from 'material-ui/styles'
+} from 'material-ui/core/styles'
+import blue from 'material-ui/core/colors/blue'
 
 export const theme = createMuiTheme({
   palette: {
