@@ -7,10 +7,10 @@ import {
 import {
   renderRoutes,
 } from 'react-router-config'
+
 import {
   MuiThemeProvider,
-} from 'material-ui/styles'
-
+} from 'material-ui/core/styles'
 import routes from 'client/routes'
 import {
   theme,

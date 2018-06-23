@@ -9,6 +9,10 @@
     "transform-class-properties",
     ["module-resolver", {
       "root": ["src"],
+      "alias": {
+        "material-ui/core":"@material-ui/core",
+        "material-ui/icons":"@material-ui/icons",
+      },
     }]
   ],
   "retainLines": true
