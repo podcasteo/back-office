@@ -5,35 +5,30 @@ import styled from 'styled-components'
 import Toolbar from 'material-ui/core/Toolbar'
 import Typography from 'material-ui/core/Typography'
 import AppBar from 'material-ui/core/AppBar'
-import Button from 'material-ui/core/Button'
 import IconButton from 'material-ui/core/IconButton'
 import AccountCircle from 'material-ui/icons/AccountCircle'
+import ScriptManagerIcon from 'material-ui/icons/Backup'
+import DataIcon from 'material-ui/icons/Storage'
 
 const RootDiv = styled.div`
   && {
     flex-grow: 1;
   }
 `
-const Title = styled.div`
+const IconDiv = styled.div`
   && {
-    flex: 1;
-    margin-left: 10px;
-  }
-`
-const LoginButton = styled(IconButton)`
-  && {
-    margin-left: -12px;
-    margin-right: 0px;
+    float: end;
   }
 `
 
 export default class MainHeader extends React.Component {
+  // TODO: history to implement
   // static propTypes = {
   //   history: PropTypes.object.isRequired,
   // }
 
   handleClick = () => {
-    console.log('handleClickAppbar')
+    // console.log('handleClickAppbar')
     // this.props.history.push('/test')
   }
 
@@ -46,17 +41,17 @@ export default class MainHeader extends React.Component {
               <Typography variant="title" color="inherit">
                 Podcasteo
               </Typography>
-              <Title>
-                <Button
-                  color="inherit"
-                  onClick={this.handleClick}
-                >
-                  DataBase
-                </Button>
-              </Title>
-              <LoginButton color="inherit" aria-label="Menu">
-                <AccountCircle />
-              </LoginButton>
+              <IconDiv>
+                <IconButton color="inherit" aria-label="Menu">
+                  <DataIcon />
+                </IconButton>
+                <IconButton color="inherit" aria-label="Menu">
+                  <ScriptManagerIcon />
+                </IconButton>
+                <IconButton color="inherit" aria-label="Menu">
+                  <AccountCircle />
+                </IconButton>
+              </IconDiv>
             </Toolbar>
           </AppBar>
         </RootDiv>

@@ -23,6 +23,7 @@ const Form = styled.form`
 `
 
 class PodcastForm extends React.Component {
+  // TODO: bug producers & API bug header url when save
   static propTypes = {
     // podcast: PropTypes.object.isRequired,
     // getPodcast: PropTypes.func.isRequired,
@@ -126,7 +127,6 @@ class PodcastForm extends React.Component {
       updatePodcast,
     } = this.props
 
-    console.log(JSON.stringify(podcast))
     delete podcast.itunesData
     delete podcast.soundcloudData
     delete podcast.youtubeData
@@ -144,7 +144,7 @@ class PodcastForm extends React.Component {
           <ExpansionPanelDetails>
             <Form>
               <TextField
-                fullwidth
+                fullwidth="true"
                 name="name"
                 label="Nom"
                 value={this.state.name}
@@ -152,7 +152,7 @@ class PodcastForm extends React.Component {
                 margin="normal"
               />
               <TextField
-                fullwidth
+                fullwidth="true"
                 name="slug"
                 label="Slug"
                 value={this.state.slug}
