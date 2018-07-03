@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import {
   withRouter,
 } from 'react-router-dom'
+import get from 'lodash/get'
 
 import Table from 'material-ui/core/Table'
 import TableBody from 'material-ui/core/TableBody'
@@ -26,9 +27,19 @@ const MyTable = styled(Table)`
 `
 
 class PodcastList extends React.Component {
+  // TODO: add filter and pagination
   static propTypes = {
     history: PropTypes.object.isRequired,
     podcasts: PropTypes.array.isRequired,
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      order: 'asc',
+      orderBy: 'calories',
+      dataType: 'training',
+    }
   }
 
   handleClick = (event, podcastId) => {
@@ -48,11 +59,12 @@ class PodcastList extends React.Component {
           </TableHead>
           <TableBody>
             {this.props.podcasts.map((podcast) => (
+              // eslint-disable-next-line
               <TableRow key={podcast._id} onClick={(event) => this.handleClick(event, podcast._id)}>
                 <TableCell component="th" scope="raw" >
                   {podcast.name}
                 </TableCell>
-                <TableCell>{podcast.lastUpdateDate}</TableCell>
+                <TableCell>{ podcast.data ? get(podcast.data[podcast.data.length - 1], 'date') : podcast.createdDate}</TableCell>
                 <TableCell>{podcast.categorie}</TableCell>
                 <TableCell> <img src={podcast.logo} alt="logo" height="100px" width="100px" /> </TableCell>
               </TableRow>

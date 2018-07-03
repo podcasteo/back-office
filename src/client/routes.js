@@ -2,7 +2,7 @@ import App from 'client/App'
 import Home from 'client/views/home'
 import Podcast from 'client/views/podcast'
 import Login from 'client/views/login'
-import Test from 'client/views/test'
+import ScriptManager from 'client/views/scriptManager'
 import NotFound from 'client/views/notFound'
 
 const routes = [
@@ -25,9 +25,9 @@ const routes = [
         component: Login,
       },
       {
-        path: '/test',
+        path: '/scripts',
         exact: true,
-        component: Test,
+        component: ScriptManager,
       },
       {
         path: '*',

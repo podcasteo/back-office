@@ -34,8 +34,8 @@ class Login extends React.Component {
       authState: '',
     }
   }
-  handleAuthFail = (response) =>{
-    console.log(response)
+  handleAuthFail = (response) => {
+    console.log(response, this.state.authState)
   }
 
   handleLogin = (event) => {
@@ -67,7 +67,7 @@ class Login extends React.Component {
       res.json().then((data) => {
         localStorage.setItem('Authorization', data.token)
       })
-      // this.props.history.push('/')
+      this.props.history.push('/')
     }).catch((err) => {
       console.log(err)
     })
