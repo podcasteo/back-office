@@ -9,8 +9,10 @@ import ExpansionPanel from 'material-ui/core/ExpansionPanel'
 import ExpansionPanelSummary from 'material-ui/core/ExpansionPanelSummary'
 import ExpansionPanelDetails from 'material-ui/core/ExpansionPanelDetails'
 import Typography from 'material-ui/core/Typography'
+import Switch from 'material-ui/core/Switch'
 import TextField from 'material-ui/core/TextField'
-import Chip from 'material-ui/core/Chip'
+import FormGroup from 'material-ui/core/FormGroup'
+import FormControlLabel from 'material-ui/core/FormControlLabel'
 import ExpandMoreIcon from 'material-ui/icons/ExpandMore'
 import Button from 'material-ui/core/Button'
 
@@ -21,15 +23,33 @@ const Form = styled.form`
     overflowX: auto;
   }
 `
+const LineForm = styled.div`
+  &&{
+    display:flex;
+    align-items: center;
+  }
+`
+const MargedTextField = styled(TextField)`
+  &&{
+    margin-left:15px;
+  }
+`
+const MainDiv = styled.div`
+  && {
+    margin: 15px;
+  }
+`
 
 class PodcastForm extends React.Component {
-  // TODO: bug producers & API bug header url when save
+  // TODO: notify when saved & update form with excel with data
   static propTypes = {
-    // podcast: PropTypes.object.isRequired,
-    // getPodcast: PropTypes.func.isRequired,
+    isPending: PropTypes.bool,
     updatePodcast: PropTypes.func.isRequired,
   }
 
+  static defaultProps = {
+    isPending: false,
+  }
   constructor(props) {
     super(props)
 
@@ -51,33 +71,16 @@ class PodcastForm extends React.Component {
     }
   }
 
-  handleDelete = (data) => () => {
-    const producers = [
-      ...this.state.producers,
-    ]
-    const chipToDelete = producers.indexOf(data)
-
-    producers.splice(chipToDelete, 1)
+  handleChange = (event) => {
     this.setState({
-      producers,
+      [event.target.name]: event.target.value,
     })
   }
 
-  handleChange = (event) => {
-    if (event.target.name === 'producers') {
-      const producers = [
-        ...this.state.producers,
-      ]
-
-      producers.push(event.target.value)
-      this.setState({
-        producers,
-      })
-    } else {
-      this.setState({
-        [event.target.name]: event.target.value,
-      })
-    }
+  handleCheck = (checkedInput) => {
+    this.setState({
+      [checkedInput]: !this.state.checkedInput,
+    })
   }
 
   handleProdviderDataDate = (provider, event) => {
@@ -136,86 +139,96 @@ class PodcastForm extends React.Component {
 
   render() {
     return (
-      <div>
+      <MainDiv>
         <ExpansionPanel>
           <ExpansionPanelSummary defaultexpanded="true" expandIcon={<ExpandMoreIcon />}>
-            <Typography> Information générale </Typography>
+            <Typography
+              variant="title"
+            >
+              Information générale
+            </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <Form>
-              <TextField
-                fullwidth="true"
-                name="name"
-                label="Nom"
-                value={this.state.name}
-                onChange={this.handleChange}
-                margin="normal"
-              />
-              <TextField
-                fullwidth="true"
-                name="slug"
-                label="Slug"
-                value={this.state.slug}
-                onChange={this.handleChange}
-                margin="normal"
-              />
-              <TextField
-                name="email"
-                label="Email"
-                value={this.state.email}
-                onChange={this.handleChange}
-                margin="normal"
-              />
-              <TextField
-                name="description"
-                label="Description"
-                value={this.state.description}
-                onChange={this.handleChange}
-                margin="normal"
-              />
-              <TextField
-                name="logo"
-                label="Logo URL"
-                value={this.state.logo}
-                onChange={this.handleChange}
-                margin="normal"
-              />
-              <TextField
-                name="region"
-                label="Logo URL"
-                value={this.state.region}
-                onChange={this.handleChange}
-                margin="normal"
-              />
-              <TextField
-                name="woman"
-                label="Woman"
-                value={this.state.woman}
-                onChange={this.handleChange}
-                margin="normal"
-              />
-              <Typography>
-                Producers
-              </Typography>
-              <TextField
-                name="producers"
-                label="Add producers"
-                onChange={this.handleChange}
-                margin="normal"
-              />
-              {this.state.producers.map((data) => (
-                <Chip
-                  key={data}
-                  label={data}
-                  onDelete={this.handleDelete(data)}
+              <FormGroup>
+                <TextField
+                  fullwidth="true"
+                  name="name"
+                  label="Nom"
+                  value={this.state.name}
+                  onChange={this.handleChange}
+                  margin="normal"
                 />
-                ))}
+              </FormGroup>
+              <LineForm>
+                <TextField
+                  name="slug"
+                  label="Slug"
+                  value={this.state.slug}
+                  onChange={this.handleChange}
+                  fullWidth
+                  margin="normal"
+                />
+                <MargedTextField
+                  name="region"
+                  label="Region"
+                  value={this.state.region}
+                  onChange={this.handleChange}
+                  fullWidth
+                  margin="normal"
+                />
+                <MargedTextField
+                  name="producers"
+                  label="Producteurs"
+                  value={this.state.producers}
+                  onChange={this.handleChange}
+                  fullWidth
+                  margin="normal"
+                />
+              </LineForm>
+              <FormGroup>
+                <TextField
+                  name="description"
+                  label="Description"
+                  multiline
+                  value={this.state.description}
+                  onChange={this.handleChange}
+                  margin="normal"
+                />
+              </FormGroup>
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={this.state.haveWomen}
+                      onChange={() => this.handleCheck('haveWomen')}
+                      value="haveWomen"
+                    />
+                  }
+                  label="Femme dans le podcast"
+                />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={this.state.haveLeadWomen}
+                      onChange={() => this.handleCheck('haveLeadWomen')}
+                      value="haveLeadWomen"
+                      color="primary"
+                    />
+                  }
+                  label="Femme en charge du podcast"
+                />
+              </FormGroup>
             </Form>
           </ExpansionPanelDetails>
         </ExpansionPanel>
         <ExpansionPanel>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography>Itunes stats</Typography>
+            <Typography
+              variant="title"
+            >
+            Itunes stats
+            </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <Form>
@@ -284,7 +297,11 @@ class PodcastForm extends React.Component {
         </ExpansionPanel>
         <ExpansionPanel>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography> Soundcloud Stats</Typography>
+            <Typography
+              variant="title"
+            >
+            Soundcloud Stats
+            </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <Form>
@@ -331,7 +348,11 @@ class PodcastForm extends React.Component {
         </ExpansionPanel>
         <ExpansionPanel>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography> Youtube Stats</Typography>
+            <Typography
+              variant="title"
+            >
+              Youtube Stats
+            </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <Form>
@@ -372,10 +393,11 @@ class PodcastForm extends React.Component {
         <Button
           color="primary"
           onClick={this.handleSave}
+          disabled={this.props.isPending}
         >
           Sauvegarder toutes les modifications
         </Button>
-      </div>
+      </MainDiv>
     )
   }
 }

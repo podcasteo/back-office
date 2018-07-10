@@ -1,6 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
+import {
+  withRouter,
+} from 'react-router-dom'
 
 import Toolbar from 'material-ui/core/Toolbar'
 import Typography from 'material-ui/core/Typography'
@@ -9,6 +12,7 @@ import IconButton from 'material-ui/core/IconButton'
 import AccountCircle from 'material-ui/icons/AccountCircle'
 import ScriptManagerIcon from 'material-ui/icons/Backup'
 import DataIcon from 'material-ui/icons/Storage'
+import ParameterIcon from 'material-ui/icons/Settings'
 
 const RootDiv = styled.div`
   && {
@@ -21,15 +25,15 @@ const IconDiv = styled.div`
   }
 `
 
-export default class MainHeader extends React.Component {
+class MainHeader extends React.Component {
   // TODO: history to implement
-  // static propTypes = {
-  //   history: PropTypes.object.isRequired,
-  // }
+  static propTypes = {
+    history: PropTypes.object.isRequired,
+  }
 
-  handleClick = () => {
+  handleClick = (url) => {
     // console.log('handleClickAppbar')
-    // this.props.history.push('/test')
+    this.props.history.push(`${url}`)
   }
 
   render() {
@@ -42,13 +46,32 @@ export default class MainHeader extends React.Component {
                 Podcasteo
               </Typography>
               <IconDiv>
-                <IconButton color="inherit" aria-label="Menu">
+                <IconButton
+                  color="inherit"
+                  onClick={() => this.handleClick('/')}
+                  aria-label="Menu"
+                >
                   <DataIcon />
                 </IconButton>
-                <IconButton color="inherit" aria-label="Menu">
+                <IconButton
+                  color="inherit"
+                  aria-label="Menu"
+                  onClick={() => this.handleClick('/scripts')}
+                >
                   <ScriptManagerIcon />
                 </IconButton>
-                <IconButton color="inherit" aria-label="Menu">
+                <IconButton
+                  onClick={() => this.handleClick('/parameters')}
+                  color="inherit"
+                  aria-label="Menu"
+                >
+                  <ParameterIcon />
+                </IconButton>
+                <IconButton
+                  onClick={() => this.handleClick('/login')}
+                  color="inherit"
+                  aria-label="Menu"
+                >
                   <AccountCircle />
                 </IconButton>
               </IconDiv>
@@ -59,3 +82,5 @@ export default class MainHeader extends React.Component {
     )
   }
 }
+
+export default withRouter(MainHeader)

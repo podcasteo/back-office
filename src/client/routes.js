@@ -3,6 +3,7 @@ import Home from 'client/views/home'
 import Podcast from 'client/views/podcast'
 import Login from 'client/views/login'
 import ScriptManager from 'client/views/scriptManager'
+import Parameters from 'client/views/parameters'
 import NotFound from 'client/views/notFound'
 
 const routes = [
@@ -28,6 +29,11 @@ const routes = [
         path: '/scripts',
         exact: true,
         component: ScriptManager,
+      },
+      {
+        path: '/parameters',
+        exact: true,
+        component: Parameters,
       },
       {
         path: '*',

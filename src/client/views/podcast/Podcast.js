@@ -9,13 +9,21 @@ class Podcast extends React.Component {
     podcastPromise: PropTypes.object.isRequired,
     getPodcast: PropTypes.func.isRequired,
     updatePodcast: PropTypes.func.isRequired,
+    updatePodcastPromise: PropTypes.object,
   }
+
+  static defaultProps = {
+    updatePodcastPromise: {},
+  }
+
+  static prop
 
   render() {
     const {
       podcastPromise,
       getPodcast,
       updatePodcast,
+      updatePodcastPromise,
     } = this.props
     let body
 
@@ -34,6 +42,7 @@ class Podcast extends React.Component {
         podcast={podcastPromise.value}
         getPodcast={getPodcast}
         updatePodcast={updatePodcast}
+        isPending={updatePodcastPromise ? updatePodcastPromise.pending : false}
       />)
     }
 

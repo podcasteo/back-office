@@ -17,12 +17,15 @@ const MyPaper = styled(Paper)`
 `
 const MainDiv = styled.div`
   margin:25px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
 `
 const ScriptDiv = styled.div`
-  margin-top:10px;
-  margin: none;
-  display:block;
-  width:30%;
+  margin: 0px
+`
+const ScriptsDiv = styled.div`
+display:flex;
 `
 
 class Home extends React.Component {
@@ -34,39 +37,41 @@ class Home extends React.Component {
     return (
       <MainLayout>
         <MainDiv>
-          <ScriptDiv>
-            Exporter pour dataiku
-            <div>
-              <TextField
-                type="date"
-              />
-              <Button variant="raised" color="primary"> Importer </Button>
-            </div>
-          </ScriptDiv>
-          <ScriptDiv>
-              Importer résultat dataiku
-            <div>
-              <Input
-                type="file"
-              />
-              <Button variant="raised" color="primary"> Exporter </Button>
-            </div>
-          </ScriptDiv>
-          <ScriptDiv>
-            Importer une liste de podcast
-            <div>
-              <Input
-                type="file"
-              />
-              <Button variant="raised" color="primary"> Importer </Button>
-            </div>
-          </ScriptDiv>
-          <ScriptDiv>
-            Publier les modifications en ligne
-            <div>
-              <Button variant="raised" color="primary"> Publier </Button>
-            </div>
-          </ScriptDiv>
+          <ScriptsDiv>
+            <ScriptDiv>
+              Exporter pour dataiku
+              <div>
+                <TextField
+                  type="date"
+                />
+                <Button variant="raised" color="primary"> Importer </Button>
+              </div>
+            </ScriptDiv>
+            <ScriptDiv>
+                Importer résultat dataiku
+              <div>
+                <Input
+                  type="file"
+                />
+                <Button variant="raised" color="primary"> Exporter </Button>
+              </div>
+            </ScriptDiv>
+            <ScriptDiv>
+              Importer une liste de podcast
+              <div>
+                <Input
+                  type="file"
+                />
+                <Button variant="raised" color="primary"> Importer </Button>
+              </div>
+            </ScriptDiv>
+            <ScriptDiv>
+              Publier les modifications en ligne
+              <div>
+                <Button variant="raised" color="primary"> Publier </Button>
+              </div>
+            </ScriptDiv>
+          </ScriptsDiv>
         </MainDiv>
         <MyPaper>
           AZE
