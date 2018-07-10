@@ -35,7 +35,8 @@ class Login extends React.Component {
     }
   }
   handleAuthFail = (response) => {
-    console.log(response, this.state.authState)
+    // TODO: auth fail info
+    console.log(response, this.state.authState)// eslint-disable-line
   }
 
   handleLogin = (event) => {

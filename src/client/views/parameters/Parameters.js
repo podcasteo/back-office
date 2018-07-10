@@ -27,12 +27,12 @@ class NotFound extends React.Component {
     if (!updateParameters || updateParameters.pending) {
       body = <div> Updating Podcast... </div>
     } else if (updateParameters.rejected) {
-      console.log('Error updating parameters:', updateParameters.reason)
+      console.log('Error updating parameters:', updateParameters.reason)// eslint-disable-line
       body = <div> Error updating parameters !</div>
     } else if (!parametersPromise || parametersPromise.pending) {
       body = <div> Loading Podcast... </div>
     } else if (parametersPromise.rejected) {
-      console.log('Error loading parameters:', parametersPromise.reason)
+      console.log('Error loading parameters:', parametersPromise.reason)// eslint-disable-line
       body = <div> Error loading parameters ! </div>
     } else {
       body = (

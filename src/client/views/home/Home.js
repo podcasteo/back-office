@@ -21,7 +21,7 @@ class Home extends React.Component {
     if (!podcastListPromise || podcastListPromise.pending) {
       body = <div> Loading Podcast... </div>
     } else if (podcastListPromise.rejected) {
-      console.log('Error loading podcast:', podcastListPromise.reason)
+      console.log('Error loading podcast:', podcastListPromise.reason)// eslint-disable-line
       body = <div> Error loading podcast ! </div>
     } else {
       body = (<PodcastList
