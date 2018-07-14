@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import Loading from 'client/components/Loading'
 import ErrorMessage from 'client/components/ErrorMessage'
 import MainLayout from 'client/components/MainLayout'
-import PodcastList from 'client/components/PodcastList'
+import TrainingList from 'client/components/TrainingList'
 
 const MainDiv = styled.div`
   && {
@@ -19,42 +19,43 @@ const MainDiv = styled.div`
 
 class Home extends React.Component {
   static propTypes = {
-    podcastListPromise: PropTypes.object.isRequired,
-    getPodcastList: PropTypes.func.isRequired,
+    trainingListPromise: PropTypes.object.isRequired,
+    getTrainingList: PropTypes.func.isRequired,
   }
 
   render() {
     const {
-      podcastListPromise,
-      getPodcastList,
+      trainingListPromise,
+      getTrainingList,
     } = this.props
     let body
 
-    if (!podcastListPromise || podcastListPromise.pending) {
+    if (!trainingListPromise || trainingListPromise.pending) {
       body = (
         <MainDiv>
           <Loading
-            message="Loading podcasts dataset"
+            message="Loading Training dataset"
           />
-        </MainDiv>)
-    } else if (podcastListPromise.rejected) {
+        </MainDiv>
+      )
+    } else if (trainingListPromise.rejected) {
       body = (
         <MainDiv>
           <ErrorMessage
             {
               ...{
                 error: {
-                  message: 'Impossible de charger les podcasts',
-                  reason: podcastListPromise.reason,
+                  message: 'Impossible de charger le training set',
+                  reason: trainingListPromise.reason,
                 },
               }
             }
           />
         </MainDiv>)
     } else {
-      body = (<PodcastList
-        podcasts={get(podcastListPromise, 'value', {})}
-        getPodcastList={getPodcastList}
+      body = (<TrainingList
+        trainings={get(trainingListPromise, 'value', {})}
+        getTrainingList={getTrainingList}
       />)
     }
 

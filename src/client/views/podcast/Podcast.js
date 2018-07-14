@@ -43,6 +43,8 @@ class Podcast extends React.Component {
         getPodcast={getPodcast}
         updatePodcast={updatePodcast}
         isPending={updatePodcastPromise ? updatePodcastPromise.pending : false}
+        isUpdated={updatePodcastPromise ? updatePodcastPromise.fulfilled : false}
+
       />)
     }
 

@@ -16,7 +16,7 @@ export default connect((props) => ({
   }),
   updatePodcast: (newPodcast) => ({
     updatePodcastPromise: {
-      url: `${config.get('apiHost')}/podcasts/${props.match.params.id}`,
+      url: `${config.get('apiHost')}/podcasts`,
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

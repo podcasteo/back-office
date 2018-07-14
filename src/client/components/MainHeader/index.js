@@ -55,6 +55,13 @@ class MainHeader extends React.Component {
                 </IconButton>
                 <IconButton
                   color="inherit"
+                  onClick={() => this.handleClick('/training')}
+                  aria-label="Menu"
+                >
+                  <DataIcon />
+                </IconButton>
+                <IconButton
+                  color="inherit"
                   aria-label="Menu"
                   onClick={() => this.handleClick('/scripts')}
                 >

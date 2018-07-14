@@ -33,7 +33,7 @@ const MargedTextField = styled(TextField)`
     margin-left:15px;
   }
 `
-const MargedTypographie = styled(Typography)`
+const MargedTypography = styled(Typography)`
   &&{
     margin-top:15px;
   }
@@ -112,11 +112,11 @@ class PodcastForm extends React.Component {
               margin="normal"
             />
           </LineForm>
-          <MargedTypographie
+          <MargedTypography
             variant="title"
           >
             Coefficients ranking
-          </MargedTypographie>
+          </MargedTypography>
           <LineForm>
             <TextField
               fullwidth="true"
@@ -151,11 +151,11 @@ class PodcastForm extends React.Component {
               margin="normal"
             />
           </LineForm>
-          <MargedTypographie
+          <MargedTypography
             variant="title"
           >
             Coefficients trainee
-          </MargedTypographie>
+          </MargedTypography>
           <LineForm>
             <TextField
               fullwidth="true"
@@ -190,11 +190,11 @@ class PodcastForm extends React.Component {
               margin="normal"
             />
           </LineForm>
-          <MargedTypographie
+          <MargedTypography
             variant="title"
           >
             Paliers
-          </MargedTypographie>
+          </MargedTypography>
           <FormGroup>
             <TextField
               fullwidth="true"
