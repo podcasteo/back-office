@@ -56,32 +56,6 @@ function fakeClick(obj) {
   obj.dispatchEvent(ev)
 }
 
-function downloadFile(name, data) {
-  const urlObject = window.URL || window.webkitURL || window
-  const exportBlob = new Blob([
-    data,
-  ])
-
-  if ('msSaveBlob' in navigator) {
-    // Prefer msSaveBlob if available - Edge supports a[download] but
-    // ignores the filename provided, using the blob UUID instead.
-    // msSaveBlob will respect the provided filename
-    navigator.msSaveBlob(exportBlob, name)
-  } else if ('download' in HTMLAnchorElement.prototype) {
-    const saveLink = document.createElementNS(
-      'http://www.w3.org/1999/xhtml',
-      'a',
-    )
-
-    saveLink.href = urlObject.createObjectURL(exportBlob)
-    saveLink.download = name
-    console.log("heya");
-    fakeClick(saveLink)
-  } // else {
-  //   throw new Error('Neither a[download] nor msSaveBlob is available')
-  // }
-}
-
 class ScriptManager extends React.Component {
   static propTypes = {
     uploadTrainingsFromCSV: PropTypes.func.isRequired,
@@ -113,6 +87,8 @@ class ScriptManager extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      downloadTrainingStatus: '',
+      downloadDataikuStatus: '',
       trainingFile: '',
       podcastsFile: '',
       rankingFile: '',
@@ -123,6 +99,60 @@ class ScriptManager extends React.Component {
       dataikuUploadDate: ' ',
       dataikuDownloadDate: ' ',
     }
+  }
+
+  componentDidUpdate() {
+    const {
+      downloadTrainingPromise,
+      downloadDataikuPromise,
+    } = this.props
+
+    console.log('train', this.state.downloadTrainingStatus)
+    console.log('data', this.state.downloadDataikuStatus)
+
+    if (downloadTrainingPromise.fulfilled && this.state.downloadTrainingStatus === 'pending') {
+      this.downloadFile('trainingdata.csv', downloadTrainingPromise.value)
+    }
+
+    if (downloadDataikuPromise.fulfilled && this.state.downloadDataikuStatus === 'pending') {
+      this.downloadFile('dataiku.csv', downloadDataikuPromise.value)
+    }
+  }
+
+  downloadFile = (name, data) => {
+    const urlObject = window.URL || window.webkitURL || window
+    const exportBlob = new Blob([
+      data,
+    ])
+
+    if (name === 'dataiku.csv') {
+      this.setState({
+        downloadDataikuStatus: 'done',
+      })
+    } else {
+      console.log('heya', name)
+      this.setState({
+        downloadTrainingStatus: 'done',
+      })
+    }
+
+    if ('msSaveBlob' in navigator) {
+      // Prefer msSaveBlob if available - Edge supports a[download] but
+      // ignores the filename provided, using the blob UUID instead.
+      // msSaveBlob will respect the provided filename
+      navigator.msSaveBlob(exportBlob, name)
+    } else if ('download' in HTMLAnchorElement.prototype) {
+      const saveLink = document.createElementNS(
+        'http://www.w3.org/1999/xhtml',
+        'a',
+      )
+
+      saveLink.href = urlObject.createObjectURL(exportBlob)
+      saveLink.download = name
+      fakeClick(saveLink)
+    } // else {
+    //   throw new Error('Neither a[download] nor msSaveBlob is available')
+    // }
   }
 
   handleChangeFile = (event) => {
@@ -150,16 +180,12 @@ class ScriptManager extends React.Component {
     switch (func) {
       case uploadTrainingsFromCSV:
         if (!this.state.trainingFile) {
-          console.log('no file selected')
-
           // TODO Manage error
           return
         }
 
         if (!this.state.trainingFile.type.includes('text')) {
           // TODO Manager error invalid type
-          console.log('wrong file type')
-
           return
         }
 
@@ -180,15 +206,11 @@ class ScriptManager extends React.Component {
       case uploadRankingFromCSV:
         if (this.state.rankingFile === '') {
           // TODO Manage error
-          console.log('Error file missing')
-
           return
         }
 
         if (this.state.rankingUploadDate === '') {
           // TODO Manage error
-          console.log('Error date missing')
-
           return
         }
 
@@ -198,15 +220,11 @@ class ScriptManager extends React.Component {
       case uploadProvidersFromCSV:
         if (this.state.providerFile === '') {
           // TODO Manage error
-          console.log('Error file missing')
-
           return
         }
 
         if (this.state.providerUploadDate === ' ') {
           // TODO Manage error
-          console.log('Error date missing')
-
           return
         }
 
@@ -216,15 +234,11 @@ class ScriptManager extends React.Component {
       case uploadDataikuFromCSV:
         if (this.state.dataikuFile === '') {
           // TODO Manage error
-          console.log('Error file missing')
-
           return
         }
 
         if (this.state.dataikuUploadDate === ' ') {
           // TODO Manage error
-          console.log('Error date missing')
-
           return
         }
 
@@ -232,9 +246,6 @@ class ScriptManager extends React.Component {
         uploadDataikuFromCSV(formdata, this.state.dataikuUploadDate)
         break
       default:
-        console.log('cant handle upload', func.name)
-
-        return
     }
   }
 
@@ -246,107 +257,28 @@ class ScriptManager extends React.Component {
 
     switch (func) {
       case downloadTrainingsCSV:
+        this.setState({
+          downloadTrainingStatus: 'pending',
+        })
         downloadTrainingsCSV()
         break
       case downloadDataikuCSV:
         if (this.state.dataikuDownloadDate === ' ') {
           // TODO err handling
-          console.log('Missing dataikuDownloadDate')
-
           return
         }
 
+        this.setState({
+          downloadDataikuStatus: 'pending',
+        })
         downloadDataikuCSV(this.state.dataikuDownloadDate)
         break
       default:
-        console.log('cant handle dowload', func)
+        // console.log('cant handle dowload', func)
     }
   }
 
-
   render() {
-    console.log('props', this.props.uploadTrainingPromise)
-    console.log('state', this.state)
-
-    const {
-      uploadTrainingPromise,
-      downloadTrainingPromise,
-      uploadPodcastsPromise,
-      uploadRankingPromise,
-      uploadProvidersPromise,
-      uploadDataikuPromise,
-      downloadDataikuPromise,
-    } = this.props
-
-    if (uploadPodcastsPromise.pending || uploadRankingPromise.pending
-      || uploadProvidersPromise.pending || uploadDataikuPromise.pending
-      || uploadTrainingPromise.pending) {
-      // TODO: handle upload
-      console.log('uploadPending')
-    }
-
-    if (downloadTrainingPromise.pending || downloadDataikuPromise.pending) {
-      // TODO: handle upload
-      console.log('downloadPending')
-    }
-
-    if (uploadPodcastsPromise.reject || uploadRankingPromise.reject
-      || uploadProvidersPromise.reject || uploadDataikuPromise.reject
-      || uploadTrainingPromise.reject) {
-      // TODO: handle upload
-      console.log('uploadFailed')
-      this.setState({
-        openDownloadSnacbar: true,
-        messageDownloadSnacbar: 'Upload échoué',
-      })
-    }
-
-    if (downloadTrainingPromise.reject || downloadDataikuPromise.reject) {
-      // TODO: handle upload
-      console.log('downloadFailed')
-      this.setState({
-        openDownloadSnacbar: true,
-        messageDownloadSnacbar: 'Download échoué',
-      })
-    }
-
-    if (uploadPodcastsPromise.fulfilled) {
-      console.log('upload Done')
-      this.setState({
-        openDownloadSnacbar: true,
-        messageDownloadSnacbar: 'Upload reussi',
-      })
-      // TODO: handle upload
-    }
-
-    if (uploadRankingPromise.fulfilled) {
-      console.log('upload Done')
-      // TODO: handle upload
-    }
-
-    if (uploadProvidersPromise.fulfilled) {
-      console.log('upload Done')
-      // TODO: handle upload
-    }
-
-    if (uploadDataikuPromise.fulfilled) {
-      console.log('upload Done')
-      // TODO: handle upload
-    }
-
-    if (uploadTrainingPromise.fulfilled) {
-      console.log('upload Done')
-      // TODO: handle upload
-    }
-
-    if (downloadTrainingPromise.fulfilled) {
-      downloadFile('trainingdata.csv', downloadTrainingPromise.value)
-    }
-
-    if (downloadDataikuPromise.fulfilled) {
-      downloadFile('dataiku.csv', downloadTrainingPromise.value)
-    }
-
     return (
       <MainLayout>
         <MainDiv>

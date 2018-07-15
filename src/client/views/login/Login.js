@@ -70,7 +70,8 @@ class Login extends React.Component {
       })
       this.props.history.push('/')
     }).catch((err) => {
-      console.log(err)
+      // TODO: handle error
+      console.log(err) // eslint-disable-line
     })
   }
 

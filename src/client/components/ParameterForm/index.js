@@ -57,7 +57,7 @@ class PodcastForm extends React.Component {
     this.state = {
       ...parameters,
     }
-    console.log(this.state)
+    // console.log(this.state)
   }
 
   handleChange = (event) => {
@@ -76,7 +76,7 @@ class PodcastForm extends React.Component {
   }
 
   render() {
-    console.log('Test:', this.props.isPending)
+    // console.log('Test:', this.props.isPending)
 
     return (
       <MainDiv>

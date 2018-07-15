@@ -60,14 +60,10 @@ class PodcastList extends React.Component {
     } = props.podcasts.pageInfo
 
     this.state = {
-      // order: 'asc',
-      // orderBy: 'calories',
-      // dataType: 'training',
       totalCount,
       rowsPerPage: pageCount,
       page: 0,
     }
-    console.log(this.state)
   }
 
   handleClick = (event, podcastId) => {

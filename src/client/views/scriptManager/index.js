@@ -15,7 +15,7 @@ const MyConnector = connect.defaults({
     const csv = response.text()
 
     if (response.status >= 200 && response.status < 300) {
-      const promise = new Promise((resolve, reject) => {
+      const promise = new Promise((resolve) => {
         resolve(csv)
       })
 
@@ -25,8 +25,6 @@ const MyConnector = connect.defaults({
     return csv.then((cause) => Promise.reject(new Error(cause))) // eslint-disable-line
   },
 })
-
-
 
 export default MyConnector(() => ({
   uploadTrainingsFromCSV: (file) => ({

@@ -60,8 +60,6 @@ class TrainingForm extends React.Component {
 
     const training = get(this.props, 'training', {})
 
-    console.log('propsTrainForm:', props.isUpdated)
-
     this.state = {
       ...training,
       open: props.isUpdated,

@@ -6,7 +6,7 @@ import Typography from 'material-ui/core/Typography'
 
 export default class Loading extends React.Component {
   static propTypes = {
-    message: PropTypes.object,
+    message: PropTypes.string,
   };
 
   static defaultProps = {

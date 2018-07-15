@@ -190,8 +190,6 @@ class PodcastForm extends React.Component {
 
     podcast.id = podcast._id // eslint-disable-line
     delete podcast._id  // eslint-disable-line
-
-    console.log('podcast:', podcast)
     updatePodcast(podcast)
   }
 
