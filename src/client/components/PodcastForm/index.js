@@ -60,32 +60,25 @@ function getFirstDay() {
 class PodcastForm extends React.Component {
   // TODO: notify when saved & update form with excel with data
   static propTypes = {
-    isPending: PropTypes.bool,
     isUpdated: PropTypes.bool,
     updatePodcast: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
-    isPending: false,
     isUpdated: false,
   }
   constructor(props) {
     super(props)
 
+    const today = new Date()
+    const firstDay = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1)).toISOString()
     const podcast = get(props, 'podcast', {})
 
+    console.log('constructor')
     this.state = {
       ...podcast,
       open: props.isUpdated,
-    }
-  }
-
-  componentDidMount() {
-    const today = new Date()
-    const firstDay = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1)).toISOString()
-    const podcast = get(this.props, 'podcast', {})
-
-    this.setState({ // eslint-disable-line
+      openRecord: false,
       itunesData: find(get(podcast, 'itunes.data', []), (data) => data.date === firstDay) || {
         date: firstDay,
       },
@@ -101,7 +94,17 @@ class PodcastForm extends React.Component {
       facebookData: find(get(podcast, 'facebook.data', []), (data) => data.date === firstDay) || {
         date: firstDay,
       },
-    })
+    }
+  }
+
+  componentDidMount() {
+    console.log('componentDidMount')
+  }
+
+  getDate = (state) => {
+    const date = get(this.state, state, ' ')
+
+    return isNil(date) ? ' ' : date
   }
 
   handleChange = (event) => {
@@ -163,12 +166,6 @@ class PodcastForm extends React.Component {
       open: false,
       openRecord: false,
     })
-  }
-
-  getDate = (state) => {
-    const date = get(this.state, state, ' ')
-
-    return isNil(date) ? date : ' '
   }
 
   handleSave = () => {
@@ -377,7 +374,6 @@ class PodcastForm extends React.Component {
         <Button
           color="primary"
           onClick={this.handleSave}
-          disabled={this.props.isPending}
         >
           Sauvegarder toutes les modifications
         </Button>
@@ -387,7 +383,7 @@ class PodcastForm extends React.Component {
             horizontal: 'right',
           }}
           open={this.state.open}
-          autoHideDuration={6000}
+          autoHideDuration={3000}
           onClose={this.handleClose}
           ContentProps={{
             'aria-describedby': 'message-id',
@@ -409,8 +405,8 @@ class PodcastForm extends React.Component {
             vertical: 'bottom',
             horizontal: 'right',
           }}
-          open={this.state.openRecord}
-          autoHideDuration={2000}
+          open={this.state.open}
+          autoHideDuration={3000}
           onClose={this.handleClose}
           ContentProps={{
             'aria-describedby': 'message-id',

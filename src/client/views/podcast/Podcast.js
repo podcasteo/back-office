@@ -1,13 +1,24 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import styled from 'styled-components'
 
 import MainLayout from 'client/components/MainLayout'
 import PodcastForm from 'client/components/PodcastForm'
+import ErrorMessage from 'client/components/ErrorMessage'
+import Loading from 'client/components/Loading'
+
+const MainDiv = styled.div`
+  && {
+    height:100%;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+  }
+`
 
 class Podcast extends React.Component {
   static propTypes = {
     podcastPromise: PropTypes.object.isRequired,
-    getPodcast: PropTypes.func.isRequired,
     updatePodcast: PropTypes.func.isRequired,
     updatePodcastPromise: PropTypes.object,
   }
@@ -21,30 +32,67 @@ class Podcast extends React.Component {
   render() {
     const {
       podcastPromise,
-      getPodcast,
       updatePodcast,
       updatePodcastPromise,
     } = this.props
     let body
 
     if (!updatePodcast || updatePodcast.pending) {
-      body = <div> Updating Podcast... </div>
+      body = (
+        <MainDiv>
+          <Loading
+            message="Update du podcast en cours"
+          />
+        </MainDiv>
+      )
     } else if (updatePodcast.rejected) {
-      console.log('Error updating podcast:', updatePodcast.reason)// eslint-disable-line
-      body = <div> Error updating podcast !</div>
+      body = (
+        <MainDiv>
+          <ErrorMessage
+            {
+              ...{
+                error: {
+                  message: 'Impossible de modifier le podcast de training',
+                  reason: updatePodcast.reason,
+                },
+              }
+            }
+          />
+        </MainDiv>)
     } else if (!podcastPromise || podcastPromise.pending) {
-      body = <div> Loading Podcast... </div>
+      body = (
+        <MainDiv>
+          <Loading
+            message="Chargement du podcast"
+          />
+        </MainDiv>
+      )
     } else if (podcastPromise.rejected) {
-      console.log('Error loading podcast:', podcastPromise.reason)// eslint-disable-line
-      body = <div> Error loading podcast ! </div>
+      body = (
+        <MainDiv>
+          <ErrorMessage
+            {
+              ...{
+                error: {
+                  message: 'Impossible de charger le podcast',
+                  reason: podcastPromise.reason,
+                },
+              }
+            }
+          />
+        </MainDiv>)
+    } else if (updatePodcastPromise.fulfilled) {
+      console.log(updatePodcastPromise)
+      body = (<PodcastForm
+        podcast={updatePodcastPromise.value}
+        updatePodcast={updatePodcast}
+        isUpdated
+      />)
     } else {
       body = (<PodcastForm
         podcast={podcastPromise.value}
-        getPodcast={getPodcast}
         updatePodcast={updatePodcast}
-        isPending={updatePodcastPromise ? updatePodcastPromise.pending : false}
-        isUpdated={updatePodcastPromise ? updatePodcastPromise.fulfilled : false}
-
+        isUpdated={false}
       />)
     }
 

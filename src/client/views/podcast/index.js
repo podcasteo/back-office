@@ -7,17 +7,12 @@ import Podcast from './Podcast'
 import config from 'client/utils/config'
 
 export default connect((props) => ({
-  getPodcast: () => ({
-    podcastPromise: {
-      url: `${config.get('apiHost')}/podcasts/id/${props.match.params.id}`,
-      force: true,
-      refreshing: true,
-    },
-  }),
   updatePodcast: (newPodcast) => ({
     updatePodcastPromise: {
       url: `${config.get('apiHost')}/podcasts`,
       method: 'PUT',
+      force: true,
+      refreshing: true,
       headers: {
         'Content-Type': 'application/json',
         Authorization: localStorage.getItem('Authorization'),

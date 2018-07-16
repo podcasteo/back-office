@@ -49,38 +49,42 @@ const MargedTypography = styled(Typography)`
     margin-top:15px;
   }
 `
-const MyButton = styled(Button)`
-  &&{
-    width: 50px;
-  }
-`
+// const MyButton = styled(Button)`
+//   &&{
+//     width: 50px;
+//   }
+// `
 
 class TrainingForm extends React.Component {
   // TODO: notify when saved & update form with excel with data
   static propTypes = {
-    isPending: PropTypes.bool,
     isUpdated: PropTypes.bool,
     updateTraining: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
-    isPending: false,
     isUpdated: false,
   }
   constructor(props) {
     super(props)
 
-    const training = get(this.props, 'training', {})
+    const training = get(props, 'training', {})
 
     this.state = {
+      open: props.isUpdated,
       ...training,
     }
-    console.log('constructor', training)
   }
 
   handleChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value,
+    })
+  }
+
+  handleClose = () => {
+    this.setState({
+      open: false,
     })
   }
 
@@ -92,7 +96,6 @@ class TrainingForm extends React.Component {
 
     training.id = training._id // eslint-disable-line
     delete training._id  // eslint-disable-line
-
     updateTraining(training)
   }
 
@@ -193,7 +196,6 @@ class TrainingForm extends React.Component {
               color="primary"
               variant="raised"
               onClick={this.handleSave}
-              disabled={this.props.isPending}
             >
               Sauvegarder toutes les modifications
             </Button>
@@ -204,13 +206,23 @@ class TrainingForm extends React.Component {
             vertical: 'bottom',
             horizontal: 'right',
           }}
-          open={this.props.isUpdated}
-          autoHideDuration={1000}
+          open={this.state.open}
+          autoHideDuration={3000}
           onClose={this.handleClose}
           ContentProps={{
             'aria-describedby': 'message-id',
           }}
           message={<span id="message-id">Modification enregistrée</span>}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={this.handleClose}
+            >
+              <CloseIcon />
+            </IconButton>,
+          ]}
         />
       </MainDiv>
     )
