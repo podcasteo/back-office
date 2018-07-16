@@ -1,5 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+
+import CircularProgress from 'material-ui/core/CircularProgress'
+import Typography from 'material-ui/core/Typography'
+
 // import styled from 'styled-components'
 
 // const MainDiv = styled.div`
@@ -29,20 +33,36 @@ class ScriptStatus extends React.Component {
       promise,
     } = this.props
 
+    console.log(promise)
+
     if (promise === {}) {
-      body = <span />
+      body = <div> Futur status </div>
     }
 
     if (promise.pending) {
-      body = <div> pending </div>
+      body = <CircularProgress />
     }
 
-    if (promise.reject) {
-      body = <div> reject </div>
+    if (promise.rejected) {
+      body = (
+        <div>
+          <Typography
+            color="error"
+          >
+            Une erreur est survenue
+          </Typography>
+          <Typography> {promise.reason.origin}</Typography>
+        </div>
+      )
     }
 
     if (promise.fulfilled) {
-      body = <div> fulfilled </div>
+      body = (
+        <Typography
+          color="primary"
+        >
+          Opération réussie !
+        </Typography>)
     }
 
     return (

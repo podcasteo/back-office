@@ -5,23 +5,52 @@ import styled from 'styled-components'
 import ScriptStatus from './ScriptStatus'
 
 import Button from 'material-ui/core/Button'
-import Paper from 'material-ui/core/Paper'
 import Input from 'material-ui/core/Input'
 import TextField from 'material-ui/core/TextField'
 import Typography from 'material-ui/core/Typography'
+import ExpansionPanel from 'material-ui/core/ExpansionPanel'
+import ExpansionPanelDetails from 'material-ui/core/ExpansionPanelDetails'
+import ExpansionPanelSummary from 'material-ui/core/ExpansionPanelSummary'
+import ExpandMoreIcon from 'material-ui/icons/ExpandMore'
 import MainLayout from 'client/components/MainLayout'
 
-const MainDiv = styled(Paper)`
-  padding:25px;
-  margin:25px;
-  display:flex;
-  flex-direction:column;
+const MainDiv = styled.div`
 
 `
-const ScriptsDiv = styled.div`
-  margin-top:25px;
+const MainPaper = styled.div`
+  && {
+    padding:25px;
+  }
+`
+const MargedTypography = styled(Typography)`
+  && {
+    margin-top:15px;
+  }
+`
+const FormAndStatusDiv = styled.div`
   display:flex;
+  flex-direction:row;
+  justify-content: space-arround;
+  align-items: center;
+`
+const Form = styled.div`
+  display:flex;
+  flex: 2
   flex-direction:column;
+`
+const MyButton = styled(Button)`
+    margin:15px;
+    width:20%;
+`
+const Status = styled(ScriptStatus)`
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1
+`
+const MyInputFile = styled(Input)`
+  margin-top:15px;
+  margin-bottom:5px;
 `
 const ScriptDiv = styled.div`
   margin-top:15px;
@@ -72,6 +101,8 @@ class ScriptManager extends React.Component {
     uploadDataikuPromise: PropTypes.object,
     downloadDataikuCSV: PropTypes.func.isRequired,
     downloadDataikuPromise: PropTypes.object,
+    publishPodcastToProduction: PropTypes.func.isRequired,
+    publishPromise: PropTypes.object,
   }
 
   static defaultProps = {
@@ -82,6 +113,7 @@ class ScriptManager extends React.Component {
     uploadProvidersPromise: {},
     uploadDataikuPromise: {},
     downloadDataikuPromise: {},
+    publishPromise: {},
   }
 
   constructor(props) {
@@ -282,190 +314,314 @@ class ScriptManager extends React.Component {
     return (
       <MainLayout>
         <MainDiv>
-          <ScriptsDiv>
-            <Typography variant="title">
+          <MainPaper>
+            <Typography variant="display1">
               Training scripts
             </Typography>
-            <ScriptDiv>
-              <Typography>
-                Upload du training set
-              </Typography>
-              <div>
-                <Input
-                  name="trainingFile"
-                  type="file"
-                  onChange={this.handleChangeFile}
-                />
-                <Button
-                  variant="raised"
-                  color="primary"
-                  onClick={() => this.handleUpload(this.props.uploadTrainingsFromCSV)}
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="title">
+                  Upload du training set
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <ScriptDiv>
+                  <FormAndStatusDiv>
+                    <Form>
+                      <Typography>
+                        Uploader le fichier comportant les données pour la création du dataset de training
+                      </Typography>
+                      <MyInputFile
+                        name="trainingFile"
+                        type="file"
+                        onChange={this.handleChangeFile}
+                      />
+                      <MyButton
+                        variant="raised"
+                        color="primary"
+                        onClick={() => this.handleUpload(this.props.uploadTrainingsFromCSV)}
+                      >
+                        Upload
+                      </MyButton>
+                    </Form>
+                    <Status
+                      promise={this.props.uploadTrainingPromise}
+                    />
+                  </FormAndStatusDiv>
+                </ScriptDiv>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography
+                  variant="title"
                 >
-                  Upload
-                </Button>
-                <ScriptStatus
-                  promise={this.props.uploadTrainingPromise}
-                />
-              </div>
-            </ScriptDiv>
-            <ScriptDiv>
-              <Typography>
                 Download du training set
-              </Typography>
-              <Button
-                variant="raised"
-                color="primary"
-                onClick={() => this.handleDownload(this.props.downloadTrainingsCSV)}
-              >
-                Download
-              </Button>
-              <ScriptStatus
-                promise={this.props.downloadTrainingPromise}
-              />
-            </ScriptDiv>
-          </ScriptsDiv>
-          <ScriptsDiv>
-            <Typography variant="title">
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <ScriptDiv>
+                  <FormAndStatusDiv>
+                    <Form>
+                      <Typography>
+                        Télécharger le fichier comportant les données du dataset de training
+                      </Typography>
+                      <MyButton
+                        variant="raised"
+                        color="primary"
+                        onClick={() => this.handleDownload(this.props.downloadTrainingsCSV)}
+                      >
+                        Download
+                      </MyButton>
+                    </Form>
+                    <Status
+                      promise={this.props.downloadTrainingPromise}
+                    />
+                  </FormAndStatusDiv>
+                </ScriptDiv>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <MargedTypography variant="display1">
               Datasets scripts
-            </Typography>
-            <ScriptDiv>
-              <Typography>
+            </MargedTypography>
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography
+                  variant="title"
+                >
                 Upload des podcasts
-              </Typography>
-              <div>
-                <Input
-                  name="podcastsFile"
-                  type="file"
-                  onChange={this.handleChangeFile}
-                />
-                <Button
-                  variant="raised"
-                  color="primary"
-                  onClick={() => this.handleUpload(this.props.uploadPodcastsFromCSV)}
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <ScriptDiv>
+                  <FormAndStatusDiv>
+                    <Form>
+                      <Typography>
+                        Uploader le fichier d&apos;initiatialisation des podcasts
+                      </Typography>
+                      <MyInputFile
+                        name="podcastsFile"
+                        type="file"
+                        onChange={this.handleChangeFile}
+                      />
+                      <MyButton
+                        variant="raised"
+                        color="primary"
+                        onClick={() => this.handleUpload(this.props.uploadPodcastsFromCSV)}
+                      >
+                        Upload
+                      </MyButton>
+                    </Form>
+                    <Status
+                      promise={this.props.uploadPodcastsPromise}
+                    />
+                  </FormAndStatusDiv>
+                </ScriptDiv>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography
+                  variant="title"
                 >
-                  Upload
-                </Button>
-                <ScriptStatus
-                  promise={this.props.uploadPodcastsPromise}
-                />
-              </div>
-            </ScriptDiv>
-            <ScriptDiv>
-              <Typography>
                 Upload des ranking
-              </Typography>
-              <div>
-                <TextField
-                  name="rankingUploadDate"
-                  label="Date"
-                  type="date"
-                  value={this.state.rankingUploadDate}
-                  onChange={this.handleChangeDate}
-                  margin="normal"
-                />
-                <Input
-                  name="rankingFile"
-                  type="file"
-                  onChange={this.handleChangeFile}
-                />
-                <Button
-                  variant="raised"
-                  color="primary"
-                  onClick={() => this.handleUpload(this.props.uploadRankingFromCSV)}
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <ScriptDiv>
+                  <FormAndStatusDiv>
+                    <Form>
+                      <Typography>
+                        Uploader le fichier comportant les informations de
+                        rankings des podcasts pour la date choisie
+                      </Typography>
+                      <TextField
+                        name="rankingUploadDate"
+                        label="Date"
+                        type="date"
+                        value={this.state.rankingUploadDate}
+                        onChange={this.handleChangeDate}
+                        margin="normal"
+                      />
+                      <MyInputFile
+                        name="rankingFile"
+                        type="file"
+                        onChange={this.handleChangeFile}
+                      />
+                      <MyButton
+                        variant="raised"
+                        color="primary"
+                        onClick={() => this.handleUpload(this.props.uploadRankingFromCSV)}
+                      >
+                        Upload
+                      </MyButton>
+                    </Form>
+                    <Status
+                      promise={this.props.uploadRankingPromise}
+                    />
+                  </FormAndStatusDiv>
+                </ScriptDiv>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography
+                  variant="title"
                 >
-                  Upload
-                </Button>
-                <ScriptStatus
-                  promise={this.props.uploadRankingPromise}
-                />
-              </div>
-            </ScriptDiv>
-            <ScriptDiv>
-              <Typography>
                 Upload des providers
-              </Typography>
-              <div>
-                <TextField
-                  name="providerUploadDate"
-                  label="Date"
-                  type="date"
-                  value={this.state.providerUploadDate}
-                  onChange={this.handleChangeDate}
-                  margin="normal"
-                />
-                <Input
-                  name="providerFile"
-                  type="file"
-                  onChange={this.handleChangeFile}
-                />
-                <Button
-                  variant="raised"
-                  color="primary"
-                  onClick={() => this.handleUpload(this.props.uploadProvidersFromCSV)}
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <ScriptDiv>
+                  <FormAndStatusDiv>
+                    <Form>
+                      <Typography>
+                        Uploader le fichier comportant les informations des
+                        providers (youtube, twitter, facebook...) des podcasts
+                        pour la date choisie
+                      </Typography>
+                      <TextField
+                        name="providerUploadDate"
+                        label="Date"
+                        type="date"
+                        value={this.state.providerUploadDate}
+                        onChange={this.handleChangeDate}
+                        margin="normal"
+                      />
+                      <MyInputFile
+                        name="providerFile"
+                        type="file"
+                        onChange={this.handleChangeFile}
+                      />
+                      <MyButton
+                        variant="raised"
+                        color="primary"
+                        onClick={() => this.handleUpload(this.props.uploadProvidersFromCSV)}
+                      >
+                        Upload
+                      </MyButton>
+                    </Form>
+                    <Status
+                      promise={this.props.uploadProvidersPromise}
+                    />
+                  </FormAndStatusDiv>
+                </ScriptDiv>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography
+                  variant="title"
                 >
-                  Upload
-                </Button>
-                <ScriptStatus
-                  promise={this.props.uploadProvidersPromise}
-                />
-              </div>
-            </ScriptDiv>
-            <ScriptDiv>
-              <Typography>
                 Upload Dataiku
-              </Typography>
-              <div>
-                <TextField
-                  name="dataikuUploadDate"
-                  label="Date"
-                  type="date"
-                  value={this.state.dataikuUploadDate}
-                  onChange={this.handleChangeDate}
-                  margin="normal"
-                />
-                <Input
-                  name="dataikuFile"
-                  type="file"
-                  onChange={this.handleChangeFile}
-                />
-                <Button
-                  variant="raised"
-                  color="primary"
-                  onClick={() => this.handleUpload(this.props.uploadDataikuFromCSV)}
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <ScriptDiv>
+                  <FormAndStatusDiv>
+                    <Form>
+                      <Typography>
+                        Uploader le fichier de sortie de dataiku
+                      </Typography>
+                      <TextField
+                        name="dataikuUploadDate"
+                        label="Date"
+                        type="date"
+                        value={this.state.dataikuUploadDate}
+                        onChange={this.handleChangeDate}
+                        margin="normal"
+                      />
+                      <MyInputFile
+                        name="dataikuFile"
+                        type="file"
+                        onChange={this.handleChangeFile}
+                      />
+                      <MyButton
+                        variant="raised"
+                        color="primary"
+                        onClick={() => this.handleUpload(this.props.uploadDataikuFromCSV)}
+                      >
+                        Upload
+                      </MyButton>
+                    </Form>
+                    <Status
+                      promise={this.props.uploadDataikuPromise}
+                    />
+                  </FormAndStatusDiv>
+                </ScriptDiv>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography
+                  variant="title"
                 >
-                  Upload
-                </Button>
-                <ScriptStatus
-                  promise={this.props.uploadDataikuPromise}
-                />
-              </div>
-            </ScriptDiv>
-            <ScriptDiv>
-              <Typography>
                 Download Dataiku csv
-              </Typography>
-              <div>
-                <TextField
-                  name="dataikuDownloadDate"
-                  label="Date"
-                  type="date"
-                  value={this.state.dataikuDownloadDate}
-                  onChange={this.handleChangeDate}
-                  margin="normal"
-                />
-                <Button
-                  variant="raised"
-                  color="primary"
-                  onClick={() => this.handleDownload(this.props.downloadDataikuCSV)}
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <ScriptDiv>
+                  <FormAndStatusDiv>
+                    <Form>
+                      <Typography>
+                        Télécharger le fichier au format
+                        pour l&apos;import dans dataiku
+                      </Typography>
+                      <TextField
+                        name="dataikuDownloadDate"
+                        label="Date"
+                        type="date"
+                        value={this.state.dataikuDownloadDate}
+                        onChange={this.handleChangeDate}
+                        margin="normal"
+                      />
+                      <MyButton
+                        variant="raised"
+                        color="primary"
+                        onClick={() => this.handleDownload(this.props.downloadDataikuCSV)}
+                      >
+                        Download
+                      </MyButton>
+                    </Form>
+                    <Status
+                      promise={this.props.downloadDataikuPromise}
+                    />
+                  </FormAndStatusDiv>
+                </ScriptDiv>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography
+                  variant="title"
                 >
-                  Download
-                </Button>
-                <ScriptStatus
-                  promise={this.props.downloadDataikuPromise}
-                />
-              </div>
-            </ScriptDiv>
-          </ScriptsDiv>
+                Publier en production
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <ScriptDiv>
+                  <FormAndStatusDiv>
+                    <Form>
+                      <Typography>
+                        Publier les dernières modifications
+                        sur la base de production
+                      </Typography>
+                      <MyButton
+                        variant="raised"
+                        color="primary"
+                        onClick={() => this.props.publishPodcastToProduction()}
+                      >
+                        Publier
+                      </MyButton>
+                    </Form>
+                    <Status
+                      promise={this.props.publishPromise}
+                    />
+                  </FormAndStatusDiv>
+                </ScriptDiv>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+          </MainPaper>
         </MainDiv>
       </MainLayout>
     )

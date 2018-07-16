@@ -67,8 +67,8 @@ class Login extends React.Component {
 
       res.json().then((data) => {
         localStorage.setItem('Authorization', data.token)
+        this.props.history.push('/')
       })
-      this.props.history.push('/')
     }).catch((err) => {
       // TODO: handle error
       console.log(err) // eslint-disable-line

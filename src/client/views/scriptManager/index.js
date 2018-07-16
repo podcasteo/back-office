@@ -99,4 +99,14 @@ export default MyConnector(() => ({
       },
     },
   }),
+  publishPodcastToProduction: () => ({
+    publishPromise: {
+      url: `${config.get('apiHost')}/podcasts/publish`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/csv',
+        Authorization: localStorage.getItem('Authorization'),
+      },
+    },
+  }),
 }))(ScriptManager)
