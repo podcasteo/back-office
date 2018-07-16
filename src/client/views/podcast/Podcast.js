@@ -82,17 +82,16 @@ class Podcast extends React.Component {
           />
         </MainDiv>)
     } else if (updatePodcastPromise.fulfilled) {
-      console.log(updatePodcastPromise)
       body = (<PodcastForm
         podcast={updatePodcastPromise.value}
         updatePodcast={updatePodcast}
-        isUpdated
+        updatePodcastPromise={updatePodcastPromise}
       />)
     } else {
       body = (<PodcastForm
         podcast={podcastPromise.value}
         updatePodcast={updatePodcast}
-        isUpdated={false}
+        updatePodcastPromise={updatePodcastPromise}
       />)
     }
 

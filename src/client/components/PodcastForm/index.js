@@ -6,6 +6,7 @@ import get from 'lodash/get'
 import styled from 'styled-components'
 import isNil from 'lodash/isNil'
 
+import FetchStatus from 'client/components/FetchStatus'
 import ExpansionPanel from 'material-ui/core/ExpansionPanel'
 import ExpansionPanelSummary from 'material-ui/core/ExpansionPanelSummary'
 import ExpansionPanelDetails from 'material-ui/core/ExpansionPanelDetails'
@@ -16,8 +17,9 @@ import FormGroup from 'material-ui/core/FormGroup'
 import FormControlLabel from 'material-ui/core/FormControlLabel'
 import ExpandMoreIcon from 'material-ui/icons/ExpandMore'
 import Button from 'material-ui/core/Button'
-import Snackbar from 'material-ui/core/Snackbar'
+import MenuItem from 'material-ui/core/MenuItem'
 import IconButton from 'material-ui/core/IconButton'
+import Snackbar from 'material-ui/core/Snackbar'
 import CloseIcon from 'material-ui/icons/Close'
 
 const providersList = [
@@ -27,11 +29,60 @@ const providersList = [
   'itunes',
   'animateur',
 ]
+const regionList = [
+  'Alsace-Champagne-Ardennes-Lorraine',
+  'Auvergne-Rhône-Alpes',
+  'Bourgogne-Franche-Comté',
+  'Bretagne',
+  'Centre-Val de Loire',
+  'Corse',
+  'Grand Est',
+  'Hauts-de-France',
+  'Île-de-France',
+  'Normandie',
+  'Nouvelle-Aquitaine',
+  'Occitanie',
+  'Pays de la Loire',
+  'Provence-Alpes-Côte d\'Azur',
+  'Guadeloupe',
+  'Guyane (française)',
+  'Martinique',
+  'Languedoc',
+  'La Réunion',
+  'Mayotte',
+  'Europe',
+  'Amériques',
+  'Afrique',
+  'Asie',
+  'Océanie',
+  '',
+]
+const categoryList = [
+  'games',
+  'technology',
+  'cinema',
+  'culture',
+  'society',
+  'sports',
+  'food',
+  'lifestyle',
+  'comedy',
+  'interview',
+  'unclassifiable',
+  '',
+]
 const Form = styled.form`
   && {
     width: 100%;
     margin-top: 15px;
     overflowX: auto;
+  }
+`
+const LastButtonAndStatus = styled.div`
+  && {
+    display:flex;
+    align-items: center;
+    justify-content: space-between
   }
 `
 const LineForm = styled.div`
@@ -60,25 +111,18 @@ function getFirstDay() {
 class PodcastForm extends React.Component {
   // TODO: notify when saved & update form with excel with data
   static propTypes = {
-    isUpdated: PropTypes.bool,
     updatePodcast: PropTypes.func.isRequired,
+    updatePodcastPromise: PropTypes.object.isRequired,
   }
 
-  static defaultProps = {
-    isUpdated: false,
-  }
-  constructor(props) {
-    super(props)
-
+  static getDerivedStateFromProps(props, state) {
     const today = new Date()
     const firstDay = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1)).toISOString()
     const podcast = get(props, 'podcast', {})
 
-    console.log('constructor')
-    this.state = {
+    return {
       ...podcast,
-      open: props.isUpdated,
-      openRecord: false,
+      open: false,
       itunesData: find(get(podcast, 'itunes.data', []), (data) => data.date === firstDay) || {
         date: firstDay,
       },
@@ -97,8 +141,33 @@ class PodcastForm extends React.Component {
     }
   }
 
-  componentDidMount() {
-    console.log('componentDidMount')
+  constructor(props) {
+    super(props)
+
+    const today = new Date()
+    const firstDay = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1)).toISOString()
+    const podcast = get(props, 'podcast', {})
+
+    console.log('constructor')
+    this.state = {
+      ...podcast,
+      open: false,
+      itunesData: find(get(podcast, 'itunes.data', []), (data) => data.date === firstDay) || {
+        date: firstDay,
+      },
+      twitterData: find(get(podcast, 'twitter.data', []), (data) => data.date === firstDay) || {
+        date: firstDay,
+      },
+      youtubeData: find(get(podcast, 'youtube.data', []), (data) => data.date === firstDay) || {
+        date: firstDay,
+      },
+      animateurData: find(get(podcast, 'animateur.data', []), (data) => data.date === firstDay) || {
+        date: firstDay,
+      },
+      facebookData: find(get(podcast, 'facebook.data', []), (data) => data.date === firstDay) || {
+        date: firstDay,
+      },
+    }
   }
 
   getDate = (state) => {
@@ -116,6 +185,17 @@ class PodcastForm extends React.Component {
   handleCheck = (checkedInput) => {
     this.setState({
       [checkedInput]: !this.state[checkedInput],
+    })
+  }
+
+  initProviderDataDate = (provider, event) => {
+    const date = new Date(event.target.value)
+    const firstDay = new Date(Date.UTC(date.getFullYear(), date.getMonth(), 1)).toISOString()
+
+    this.setState({
+      [`${provider}Data`]: find(this.state[provider].data, (data) => data.date === firstDay) || {
+        date: firstDay,
+      },
     })
   }
 
@@ -157,14 +237,13 @@ class PodcastForm extends React.Component {
         ...this.state[provider],
         data: providerDataArray,
       },
-      openRecord: true,
+      open: true,
     })
   }
 
   handleClose = () => {
     this.setState({
       open: false,
-      openRecord: false,
     })
   }
 
@@ -285,6 +364,12 @@ class PodcastForm extends React.Component {
           </ExpansionPanelDetails>
         </ExpansionPanel>
       ))
+    const CategorySelect = categoryList.map((category) => (
+      <MenuItem key={category} value={category}>{category}</MenuItem>
+    ))
+    const RegionSelect = regionList.map((region) => (
+      <MenuItem key={region} value={region}>{region}</MenuItem>
+    ))
 
     return (
       <MainDiv>
@@ -320,11 +405,25 @@ class PodcastForm extends React.Component {
                 <MargedTextField
                   name="region"
                   label="Region"
-                  value={this.state.region}
+                  value={get(this.state, 'region', '')}
                   onChange={this.handleChange}
                   fullWidth
+                  select
                   margin="normal"
-                />
+                >
+                  {RegionSelect}
+                </MargedTextField>
+                <MargedTextField
+                  name="category"
+                  label="Catégorie"
+                  value={get(this.state, 'category', '')}
+                  onChange={this.handleChange}
+                  fullWidth
+                  select
+                  margin="normal"
+                >
+                  {CategorySelect}
+                </MargedTextField>
                 <MargedTextField
                   name="producers"
                   label="Producteurs"
@@ -371,12 +470,17 @@ class PodcastForm extends React.Component {
           </ExpansionPanelDetails>
         </ExpansionPanel>
         {ProviderDataArray}
-        <Button
-          color="primary"
-          onClick={this.handleSave}
-        >
-          Sauvegarder toutes les modifications
-        </Button>
+        <LastButtonAndStatus>
+          <Button
+            color="primary"
+            onClick={this.handleSave}
+          >
+            Sauvegarder toutes les modifications
+          </Button>
+          <FetchStatus
+            promise={this.props.updatePodcastPromise}
+          />
+        </LastButtonAndStatus>
         <Snackbar
           anchorOrigin={{
             vertical: 'bottom',
@@ -388,30 +492,7 @@ class PodcastForm extends React.Component {
           ContentProps={{
             'aria-describedby': 'message-id',
           }}
-          message={<span id="message-id">Modification enregistrée</span>}
-          action={[
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              onClick={this.handleClose}
-            >
-              <CloseIcon />
-            </IconButton>,
-          ]}
-        />
-        <Snackbar
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-          }}
-          open={this.state.open}
-          autoHideDuration={3000}
-          onClose={this.handleClose}
-          ContentProps={{
-            'aria-describedby': 'message-id',
-          }}
-          message={<span id="message-id">Saisie prête pour la sauvegarde</span>}
+          message={<span id="message-id"> Enregistrement pret à la sauvegarde </span>}
           action={[
             <IconButton
               key="close"

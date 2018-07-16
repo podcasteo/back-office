@@ -2,8 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
-import ScriptStatus from './ScriptStatus'
-
+import FetchStatus from 'client/components/FetchStatus'
 import Button from 'material-ui/core/Button'
 import Input from 'material-ui/core/Input'
 import TextField from 'material-ui/core/TextField'
@@ -42,7 +41,7 @@ const MyButton = styled(Button)`
     margin:15px;
     width:20%;
 `
-const Status = styled(ScriptStatus)`
+const Status = styled(FetchStatus)`
   display:flex;
   justify-content: center;
   align-items: center;
