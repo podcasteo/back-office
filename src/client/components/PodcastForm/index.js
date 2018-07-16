@@ -115,7 +115,7 @@ class PodcastForm extends React.Component {
 
   handleCheck = (checkedInput) => {
     this.setState({
-      [checkedInput]: !this.state.checkedInput,
+      [checkedInput]: !this.state[checkedInput],
     })
   }
 
