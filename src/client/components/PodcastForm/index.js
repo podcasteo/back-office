@@ -4,6 +4,7 @@ import find from 'lodash/find'
 import findIndex from 'lodash/findIndex'
 import get from 'lodash/get'
 import styled from 'styled-components'
+import isNil from 'lodash/isNil'
 
 import ExpansionPanel from 'material-ui/core/ExpansionPanel'
 import ExpansionPanelSummary from 'material-ui/core/ExpansionPanelSummary'
@@ -164,6 +165,12 @@ class PodcastForm extends React.Component {
     })
   }
 
+  getDate = (state) => {
+    const date = get(this.state, state, ' ')
+
+    return isNil(date) ? date : ' '
+  }
+
   handleSave = () => {
     const podcast = this.state
     const {
@@ -237,7 +244,7 @@ class PodcastForm extends React.Component {
                   name="lastRelease"
                   label="Dernière parution"
                   type="date"
-                  value={get(this.state, `${provider}Data.lastRelease`, ' ').split('T')[0]}
+                  value={this.getDate(`${provider}Data.lastRelease`).split('T')[0]}
                   onChange={(event) => this.handleProviderData(`${provider}`, event)}
                   margin="normal"
                 />

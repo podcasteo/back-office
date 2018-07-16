@@ -11,6 +11,8 @@ export default connect((props) => ({
     updateTrainingPromise: {
       url: `${config.get('apiHost')}/trainings/`,
       method: 'PUT',
+      refresh: true,
+      force: true,
       headers: {
         'Content-Type': 'application/json',
         Authorization: localStorage.getItem('Authorization'),

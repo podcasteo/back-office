@@ -25,10 +25,6 @@ class Training extends React.Component {
     } = this.props
     let body
 
-    if (updateTrainingPromise) {
-      console.log('updateTrainingPromise', updateTrainingPromise)
-    }
-
     if (!updateTrainingPromise || updateTrainingPromise.pending) {
       body = <div> Updating Training... </div>
     } else if (updateTrainingPromise.rejected) {

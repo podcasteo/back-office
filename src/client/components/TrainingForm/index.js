@@ -32,6 +32,13 @@ const LineForm = styled.div`
     align-items: center;
   }
 `
+const ButtonDiv = styled.div`
+  &&{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+  }
+`
 const MargedTextField = styled(TextField)`
   &&{
     margin-left:15px;
@@ -40,6 +47,11 @@ const MargedTextField = styled(TextField)`
 const MargedTypography = styled(Typography)`
   &&{
     margin-top:15px;
+  }
+`
+const MyButton = styled(Button)`
+  &&{
+    width: 50px;
   }
 `
 
@@ -62,14 +74,8 @@ class TrainingForm extends React.Component {
 
     this.state = {
       ...training,
-      open: props.isUpdated,
     }
-  }
-
-  handleClose = () => {
-    this.setState({
-      open: false,
-    })
+    console.log('constructor', training)
   }
 
   handleChange = (event) => {
@@ -182,36 +188,29 @@ class TrainingForm extends React.Component {
               margin="normal"
             />
           </LineForm>
-          <Button
-            color="primary"
-            onClick={this.handleSave}
-            disabled={this.props.isPending}
-          >
-            Sauvegarder toutes les modifications
-          </Button>
+          <ButtonDiv>
+            <Button
+              color="primary"
+              variant="raised"
+              onClick={this.handleSave}
+              disabled={this.props.isPending}
+            >
+              Sauvegarder toutes les modifications
+            </Button>
+          </ButtonDiv>
         </MainPaper>
         <Snackbar
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'right',
           }}
-          open={this.state.open}
-          autoHideDuration={6000}
+          open={this.props.isUpdated}
+          autoHideDuration={1000}
           onClose={this.handleClose}
           ContentProps={{
             'aria-describedby': 'message-id',
           }}
           message={<span id="message-id">Modification enregistrée</span>}
-          action={[
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              onClick={this.handleClose}
-            >
-              <CloseIcon />
-            </IconButton>,
-          ]}
         />
       </MainDiv>
     )

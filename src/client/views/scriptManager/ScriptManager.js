@@ -139,9 +139,6 @@ class ScriptManager extends React.Component {
       downloadDataikuPromise,
     } = this.props
 
-    console.log('train', this.state.downloadTrainingStatus)
-    console.log('data', this.state.downloadDataikuStatus)
-
     if (downloadTrainingPromise.fulfilled && this.state.downloadTrainingStatus === 'pending') {
       this.downloadFile('trainingdata.csv', downloadTrainingPromise.value)
     }
@@ -162,7 +159,6 @@ class ScriptManager extends React.Component {
         downloadDataikuStatus: 'done',
       })
     } else {
-      console.log('heya', name)
       this.setState({
         downloadTrainingStatus: 'done',
       })
