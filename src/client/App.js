@@ -1,6 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {
+  injectGlobal,
+} from 'styled-components'
+import {
   renderRoutes,
 } from 'react-router-config'
 import {
@@ -8,6 +11,20 @@ import {
 } from 'react-helmet'
 
 import withStyle from 'client/utils/withStyle'
+
+// eslint-disable-next-line
+const style = injectGlobal`
+  html,body,#app,.app-wrapper {
+    margin:0;
+    padding:0;
+    height:100%
+  }
+
+  .app-wrapper {
+    display:flex;
+    flex-direction: column;
+  }
+`
 
 class App extends React.Component {
   static propTypes = {
