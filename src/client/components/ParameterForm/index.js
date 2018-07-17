@@ -57,12 +57,12 @@ class ParameterForm extends React.Component {
   constructor(props) {
     super(props)
 
-    const parameters = get(this.props, 'parameters', {})
+    const parameters = get(this.props, 'parameters')
 
-    parameters.audiences_step = parameters.audiences_step.toString()
-    parameters.network_step = parameters.network_step.toString()
-    parameters.itunes_step = parameters.itunes_step.toString()
-    parameters.frequency_step = parameters.frequency_step.toString()
+    parameters.audiences_step = get(parameters, 'audiences_step', '').toString()
+    parameters.network_step = get(parameters, 'network_step', '').toString()
+    parameters.itunes_step = get(parameters, 'itunes_step', '').toString()
+    parameters.frequency_step = get(parameters, 'frequency_step', '').toString()
 
     this.state = {
       ...parameters,
@@ -120,7 +120,6 @@ class ParameterForm extends React.Component {
             <TextField
               fullwidth="true"
               type="number"
-              required
               name="coeff_audience_itunes"
               label="coeff_audience_itunes"
               value={this.state.coeff_audience_itunes}
@@ -162,11 +161,11 @@ class ParameterForm extends React.Component {
               margin="normal"
             />
             <MargedTextField
-              fullwidth="true"
               type="number"
-              name="coeff_ranking_twitter"
-              label="coeff_ranking_twitter"
-              value={this.state.coeff_ranking_twitter}
+              fullwidth="true"
+              name="coeff_ranking_itunes"
+              label="coeff_ranking_itunes"
+              value={this.state.coeff_ranking_itunes}
               onChange={this.handleChange}
               margin="normal"
             />
@@ -176,6 +175,17 @@ class ParameterForm extends React.Component {
               name="coeff_ranking_facebook"
               label="coeff_ranking_facebook"
               value={this.state.coeff_ranking_facebook}
+              onChange={this.handleChange}
+              margin="normal"
+            />
+          </LineForm>
+          <LineForm>
+            <MargedTextField
+              fullwidth="true"
+              type="number"
+              name="coeff_ranking_twitter"
+              label="coeff_ranking_twitter"
+              value={this.state.coeff_ranking_twitter}
               onChange={this.handleChange}
               margin="normal"
             />
