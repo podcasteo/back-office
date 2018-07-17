@@ -1,10 +1,22 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import styled from 'styled-components'
 
 import MainLayout from 'client/components/MainLayout'
 import ParameterForm from 'client/components/ParameterForm'
+import ErrorMessage from 'client/components/ErrorMessage'
+import Loading from 'client/components/Loading'
 
-class NotFound extends React.Component {
+const MainDiv = styled.div`
+  && {
+    height:100%;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+  }
+`
+
+class Parameters extends React.Component {
   static propTypes = {
     parametersPromise: PropTypes.object.isRequired,
     getParameters: PropTypes.func.isRequired,
@@ -18,29 +30,45 @@ class NotFound extends React.Component {
   render() {
     const {
       parametersPromise,
-      getParameters,
       updateParameters,
       updateParametersPromise,
     } = this.props
     let body
 
-    if (!updateParameters || updateParameters.pending) {
-      body = <div> Updating Podcast... </div>
-    } else if (updateParameters.rejected) {
-      // console.log('Error updating parameters:', updateParameters.reason)// eslint-disable-line
-      body = <div> Error updating parameters !</div>
-    } else if (!parametersPromise || parametersPromise.pending) {
-      body = <div> Loading Podcast... </div>
+    if (!parametersPromise || parametersPromise.pending) {
+      body = (
+        <MainDiv>
+          <Loading
+            message="Chargement des parametres"
+          />
+        </MainDiv>
+      )
     } else if (parametersPromise.rejected) {
-      // console.log('Error loading parameters:', parametersPromise.reason)// eslint-disable-line
-      body = <div> Error loading parameters ! </div>
+      body = (
+        <MainDiv>
+          <ErrorMessage
+            {
+              ...{
+                error: {
+                  message: 'Impossible de charger le podcast',
+                  reason: parametersPromise.reason,
+                },
+              }
+            }
+          />
+        </MainDiv>)
+    } else if (updateParametersPromise.fulfilled) {
+      body = (<ParameterForm
+        parameters={updateParametersPromise.value}
+        updateParameters={updateParameters}
+        updateParametersPromise={updateParametersPromise}
+      />)
     } else {
       body = (
         <ParameterForm
           parameters={parametersPromise.value}
-          getParameters={getParameters}
           updateParameters={updateParameters}
-          isPending={updateParametersPromise ? updateParametersPromise.pending : false}
+          updateParametersPromise={updateParametersPromise}
         />)
     }
 
@@ -52,4 +80,4 @@ class NotFound extends React.Component {
   }
 }
 
-export default NotFound
+export default Parameters

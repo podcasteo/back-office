@@ -37,29 +37,7 @@ class Training extends React.Component {
     } = this.props
     let body
 
-    if (!updateTrainingPromise || updateTrainingPromise.pending) {
-      body = (
-        <MainDiv>
-          <Loading
-            message="Update du podcast de training en cours"
-          />
-        </MainDiv>
-      )
-    } else if (updateTrainingPromise.rejected) {
-      body = (
-        <MainDiv>
-          <ErrorMessage
-            {
-              ...{
-                error: {
-                  message: 'Impossible de modifier le podcast de training',
-                  reason: updateTrainingPromise.reason,
-                },
-              }
-            }
-          />
-        </MainDiv>)
-    } else if (!trainingPromise || trainingPromise.pending) {
+    if (!trainingPromise || trainingPromise.pending) {
       body = (
         <MainDiv>
           <Loading
@@ -85,13 +63,13 @@ class Training extends React.Component {
       body = (<TrainingForm
         training={updateTrainingPromise.value}
         updateTraining={updateTraining}
-        isUpdated
+        updateTrainingPromise={updateTrainingPromise}
       />)
     } else {
       body = (<TrainingForm
         training={trainingPromise.value}
         updateTraining={updateTraining}
-        isUpdated={false}
+        updateTrainingPromise={updateTrainingPromise}
       />)
     }
 

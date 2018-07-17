@@ -15,7 +15,7 @@ export default connect(() => ({
     },
   }),
   updateParameters: (newParameters) => ({
-    updateParameterPromise: {
+    updateParametersPromise: {
       url: `${config.get('apiHost')}/parameters`,
       method: 'PUT',
       headers: {
@@ -23,13 +23,6 @@ export default connect(() => ({
         Authorization: localStorage.getItem('Authorization'),
       },
       body: JSON.stringify(newParameters),
-      andThen: () => ({
-        parametersPromise: {
-          url: `${config.get('apiHost')}/parameters`,
-          force: true,
-          refreshing: true,
-        },
-      }),
     },
   }),
   parametersPromise: `${config.get('apiHost')}/parameters`,

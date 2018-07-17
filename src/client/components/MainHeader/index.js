@@ -77,7 +77,6 @@ class MainHeader extends React.Component {
   }
 
   handleClick = (url) => {
-    // console.log('handleClickAppbar')
     this.props.history.push(`${url}`)
   }
 
