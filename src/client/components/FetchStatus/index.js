@@ -13,7 +13,7 @@ import Typography from 'material-ui/core/Typography'
 //   align-items: center;
 // `
 
-class ScriptStatus extends React.Component {
+class FetchStatus extends React.Component {
   static propTypes = {
     promise: PropTypes.object,
   }
@@ -21,11 +21,6 @@ class ScriptStatus extends React.Component {
   static defaultProps = {
     promise: {},
   }
-
-  // constructor(props) {
-  //   super(props)
-  //   this.state = {}
-  // }
 
   render() {
     let body
@@ -51,7 +46,7 @@ class ScriptStatus extends React.Component {
           >
             Une erreur est survenue
           </Typography>
-          <Typography> {promise.reason.origin}</Typography>
+          <Typography> {promise.reason.cause.origin} </Typography>
         </div>
       )
     }
@@ -73,4 +68,4 @@ class ScriptStatus extends React.Component {
   }
 }
 
-export default ScriptStatus
+export default FetchStatus
