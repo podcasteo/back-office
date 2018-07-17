@@ -256,8 +256,6 @@ class PodcastForm extends React.Component {
     const providerData = get(this.state, `${provider}Data`, {})
     const oldDataIndex = findIndex(get(this.state, `${provider}.data`, []), (data) => data.date === providerData.date)
 
-    console.log(provider, this.state[provider])
-
     if (this.state[provider].url === '' || this.state[provider].slug === '') {
       this.setState({
         errorField: {

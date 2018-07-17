@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import get from 'lodash/get'
 import {
   withRouter,
 } from 'react-router-dom'
@@ -55,12 +56,10 @@ class PodcastList extends React.Component {
     super(props)
 
     const {
-      totalCount,
       pageCount,
     } = props.podcasts.pageInfo
 
     this.state = {
-      totalCount,
       rowsPerPage: pageCount,
       page: 0,
     }
@@ -70,17 +69,17 @@ class PodcastList extends React.Component {
     this.props.history.push(`/podcast/${podcastId}`)
   }
 
-  handleChangePage = (event, page) => {
+  handleChangePage = (event, page, offset) => {
     this.setState({
       page,
-    })
-    this.props.getPodcastList(page, this.state.rowsPerPage)
+    }, () => this.props.getPodcastList(offset, this.state.rowsPerPage))
   }
 
   handleChangeRowsPerPage = (event) => {
     this.setState({
+      page: 0,
       rowsPerPage: event.target.value,
-    })
+    }, () => this.props.getPodcastList(0, this.state.rowsPerPage))
   }
 
   render() {
@@ -117,12 +116,18 @@ class PodcastList extends React.Component {
               <TableRow>
                 <TablePagination
                   colSpan={3}
-                  count={this.state.totalCount}
+                  count={get(this.props, 'podcasts.pageInfo.totalCount', 0)}
+                  rowsPerPageOptions={[5, 10, 20, 50]} // eslint-disable-line
                   rowsPerPage={this.state.rowsPerPage}
                   page={this.state.page}
                   onChangePage={this.handleChangePage}
                   onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                  ActionsComponent={TablePaginationActionsWrapped}
+                  ActionsComponent={(props) =>
+                    (<TablePaginationActionsWrapped
+                      {...props}
+                      hasNextPage={get(this.props, 'podcasts.pageInfo.hasNextPage', false)}
+                      hasPreviousPage={get(this.props, 'podcasts.pageInfo.hasPreviousPage', false)}
+                    />)}
                 />
               </TableRow>
             </TableFooter>

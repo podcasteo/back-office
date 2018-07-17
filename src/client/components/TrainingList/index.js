@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import get from 'lodash/get'
 import {
   withRouter,
 } from 'react-router-dom'
@@ -55,15 +56,10 @@ class TrainingList extends React.Component {
     super(props)
 
     const {
-      totalCount,
       pageCount,
     } = props.trainings.pageInfo
 
     this.state = {
-      // order: 'asc',
-      // orderBy: 'calories',
-      // dataType: 'training',
-      totalCount,
       rowsPerPage: pageCount,
       page: 0,
     }
@@ -73,17 +69,17 @@ class TrainingList extends React.Component {
     this.props.history.push(`/training/${trainingId}`)
   }
 
-  handleChangePage = (event, page) => {
+  handleChangePage = (event, page, offset) => {
     this.setState({
       page,
-    })
-    this.props.getTrainingList(page, this.state.rowsPerPage)
+    }, () => this.props.getTrainingList(offset, this.state.rowsPerPage))
   }
 
   handleChangeRowsPerPage = (event) => {
     this.setState({
+      page: 0,
       rowsPerPage: event.target.value,
-    })
+    }, () => this.props.getTrainingList(0, this.state.rowsPerPage))
   }
 
   render() {
@@ -120,12 +116,18 @@ class TrainingList extends React.Component {
               <TableRow>
                 <TablePagination
                   colSpan={3}
-                  count={this.state.totalCount}
+                  count={get(this.props, 'trainings.pageInfo.totalCount', 0)}
+                  rowsPerPageOptions={[5, 10, 20, 50]} // eslint-disable-line
                   rowsPerPage={this.state.rowsPerPage}
                   page={this.state.page}
                   onChangePage={this.handleChangePage}
                   onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                  ActionsComponent={TablePaginationActionsWrapped}
+                  ActionsComponent={(props) =>
+                    (<TablePaginationActionsWrapped
+                      {...props}
+                      hasNextPage={get(this.props, 'trainings.pageInfo.hasNextPage', false)}
+                      hasPreviousPage={get(this.props, 'trainings.pageInfo.hasPreviousPage', false)}
+                    />)}
                 />
               </TableRow>
             </TableFooter>

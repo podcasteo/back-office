@@ -19,22 +19,31 @@ const PaginationDiv = styled.div`
 
 class TablePaginationActions extends React.Component {
   handleFirstPageButtonClick = (event) => {
-    this.props.onChangePage(event, 0)
+    const page = 0
+    const offset = 0
+
+    this.props.onChangePage(event, page, offset)
   }
 
   handleBackButtonClick = (event) => {
-    this.props.onChangePage(event, this.props.page - 1)
+    const page = this.props.page - 1
+    const offset = page * this.props.rowsPerPage
+
+    this.props.onChangePage(event, page, offset)
   }
 
   handleNextButtonClick = (event) => {
-    this.props.onChangePage(event, this.props.page + 1)
+    const page = this.props.page + 1
+    const offset = page * this.props.rowsPerPage
+
+    this.props.onChangePage(event, page, offset)
   }
 
   handleLastPageButtonClick = (event) => {
-    this.props.onChangePage(
-      event,
-      Math.max(0, Math.ceil(this.props.count / this.props.rowsPerPage) - 1),
-    )
+    const page = Math.max(0, Math.ceil(this.props.count / this.props.rowsPerPage) - 1)
+    const offset = page * this.props.rowsPerPage
+
+    this.props.onChangePage(event, page, offset)
   }
 
   render() {
@@ -43,6 +52,8 @@ class TablePaginationActions extends React.Component {
       page,
       rowsPerPage,
       theme,
+      hasNextPage,
+      hasPreviousPage,
     } = this.props
 
     return (
@@ -56,14 +67,14 @@ class TablePaginationActions extends React.Component {
         </IconButton>
         <IconButton
           onClick={this.handleBackButtonClick}
-          disabled={page === 0}
+          disabled={!hasPreviousPage}
           aria-label="Previous Page"
         >
           {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
         </IconButton>
         <IconButton
           onClick={this.handleNextButtonClick}
-          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+          disabled={!hasNextPage}
           aria-label="Next Page"
         >
           {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
@@ -86,6 +97,8 @@ TablePaginationActions.propTypes = {
   page: PropTypes.number.isRequired,
   rowsPerPage: PropTypes.number.isRequired,
   theme: PropTypes.object.isRequired,
+  hasNextPage: PropTypes.bool.isRequired,
+  hasPreviousPage: PropTypes.bool.isRequired,
 }
 
 export default TablePaginationActions
