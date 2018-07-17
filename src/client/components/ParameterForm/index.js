@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import get from 'lodash/get'
 import styled from 'styled-components'
 
+import FetchStatus from 'client/components/FetchStatus'
 import TextField from 'material-ui/core/TextField'
 import Typography from 'material-ui/core/Typography'
 import FormGroup from 'material-ui/core/FormGroup'
@@ -23,6 +24,13 @@ const MainPaper = styled(Paper)`
     flex-direction: column;
   }
 `
+const LastButtonAndStatus = styled.div`
+  && {
+    display:flex;
+    align-items: center;
+    justify-content: space-between
+  }
+`
 const LineForm = styled.div`
   &&{
     display:flex;
@@ -39,25 +47,26 @@ const MargedTypography = styled(Typography)`
   }
 `
 
-class PodcastForm extends React.Component {
+class ParameterForm extends React.Component {
   // TODO: notify when saved & update form with excel with data
   static propTypes = {
-    isPending: PropTypes.bool,
     updateParameters: PropTypes.func.isRequired,
+    updateParametersPromise: PropTypes.object.isRequired,
   }
 
-  static defaultProps = {
-    isPending: false,
-  }
   constructor(props) {
     super(props)
 
     const parameters = get(this.props, 'parameters', {})
 
+    parameters.audiences_step = parameters.audiences_step.toString()
+    parameters.network_step = parameters.network_step.toString()
+    parameters.itunes_step = parameters.itunes_step.toString()
+    parameters.frequency_step = parameters.frequency_step.toString()
+
     this.state = {
       ...parameters,
     }
-    // console.log(this.state)
   }
 
   handleChange = (event) => {
@@ -71,13 +80,34 @@ class PodcastForm extends React.Component {
     const {
       updateParameters,
     } = this.props
+    const keys = Object.keys(parameters)
+    const parsedParam = {}
 
-    updateParameters(parameters)
+    keys.forEach((key) => {
+      if (!key.includes('step')) {
+        parsedParam[key] = parameters[key]
+
+        return
+      }
+
+      const valueArray = parameters[key].split(',')
+      const parsed = []
+      let tmp
+
+      for (let i = 0; i < valueArray.length; i++) {
+        tmp = parseFloat(valueArray[i])
+
+        if (!Number.isNaN(tmp)) {
+          parsed.push(tmp)
+        }
+      }
+
+      parsedParam[key] = parsed
+    })
+    updateParameters(parsedParam)
   }
 
   render() {
-    // console.log('Test:', this.props.isPending)
-
     return (
       <MainDiv>
         <MainPaper>
@@ -89,6 +119,8 @@ class PodcastForm extends React.Component {
           <LineForm>
             <TextField
               fullwidth="true"
+              type="number"
+              required
               name="coeff_audience_itunes"
               label="coeff_audience_itunes"
               value={this.state.coeff_audience_itunes}
@@ -97,6 +129,7 @@ class PodcastForm extends React.Component {
             />
             <MargedTextField
               fullwidth="true"
+              type="number"
               name="coeff_audience_affiliation"
               label="coeff_audience_affiliation"
               value={this.state.coeff_audience_affiliation}
@@ -105,6 +138,7 @@ class PodcastForm extends React.Component {
             />
             <MargedTextField
               fullwidth="true"
+              type="number"
               name="coeff_audience_reseaux"
               label="coeff_audience_reseaux"
               value={this.state.coeff_audience_reseaux}
@@ -120,6 +154,7 @@ class PodcastForm extends React.Component {
           <LineForm>
             <TextField
               fullwidth="true"
+              type="number"
               name="coeff_ranking_audience"
               label="coeff_ranking_audience"
               value={this.state.coeff_ranking_audience}
@@ -128,6 +163,7 @@ class PodcastForm extends React.Component {
             />
             <MargedTextField
               fullwidth="true"
+              type="number"
               name="coeff_ranking_twitter"
               label="coeff_ranking_twitter"
               value={this.state.coeff_ranking_twitter}
@@ -135,6 +171,7 @@ class PodcastForm extends React.Component {
               margin="normal"
             />
             <MargedTextField
+              type="number"
               fullwidth="true"
               name="coeff_ranking_facebook"
               label="coeff_ranking_facebook"
@@ -144,6 +181,7 @@ class PodcastForm extends React.Component {
             />
             <MargedTextField
               fullwidth="true"
+              type="number"
               name="coeff_ranking_twitter_anim"
               label="coeff_ranking_twitter_anim"
               value={this.state.coeff_ranking_twitter_anim}
@@ -159,6 +197,7 @@ class PodcastForm extends React.Component {
           <LineForm>
             <TextField
               fullwidth="true"
+              type="number"
               name="coeff_trainee_audience"
               label="coeff_trainee_audience"
               value={this.state.coeff_trainee_audience}
@@ -167,6 +206,7 @@ class PodcastForm extends React.Component {
             />
             <MargedTextField
               fullwidth="true"
+              type="number"
               name="coeff_trainee_episodes"
               label="coeff_trainee_episodes"
               value={this.state.coeff_trainee_episodes}
@@ -176,6 +216,7 @@ class PodcastForm extends React.Component {
             <MargedTextField
               fullwidth="true"
               name="coeff_trainee_age"
+              type="number"
               label="coeff_trainee_age"
               value={this.state.coeff_trainee_age}
               onChange={this.handleChange}
@@ -183,6 +224,7 @@ class PodcastForm extends React.Component {
             />
             <MargedTextField
               fullwidth="true"
+              type="number"
               name="coeff_trainee_const"
               label="coeff_trainee_const"
               value={this.state.coeff_trainee_const}
@@ -235,17 +277,21 @@ class PodcastForm extends React.Component {
               margin="normal"
             />
           </FormGroup>
-          <Button
-            color="primary"
-            onClick={this.handleSave}
-            disabled={this.props.isPending}
-          >
-            Sauvegarder toutes les modifications
-          </Button>
+          <LastButtonAndStatus>
+            <Button
+              color="primary"
+              onClick={this.handleSave}
+            >
+              Sauvegarder les modifications
+            </Button>
+            <FetchStatus
+              promise={this.props.updateParametersPromise}
+            />
+          </LastButtonAndStatus>
         </MainPaper>
       </MainDiv>
     )
   }
 }
 
-export default PodcastForm
+export default ParameterForm

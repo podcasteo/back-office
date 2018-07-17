@@ -115,7 +115,7 @@ class PodcastForm extends React.Component {
     updatePodcastPromise: PropTypes.object.isRequired,
   }
 
-  static getDerivedStateFromProps(props, state) { // eslint-disable-line
+  static getDerivedStateFromProps(props, state) {
     const today = new Date()
     const firstDay = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1)).toISOString()
     const podcast = get(props, 'podcast', {})
@@ -148,7 +148,6 @@ class PodcastForm extends React.Component {
     const firstDay = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1)).toISOString()
     const podcast = get(props, 'podcast', {})
 
-    // console.log('constructor')
     this.state = {
       ...podcast,
       open: false,
@@ -327,6 +326,7 @@ class PodcastForm extends React.Component {
                 <TextField
                   name="trackCount"
                   label="Track Count"
+                  type="number"
                   value={get(this.state, `${provider}Data.trackCount`, '')}
                   onChange={(event) => this.handleProviderData(`${provider}`, event)}
                   margin="normal"
@@ -334,6 +334,7 @@ class PodcastForm extends React.Component {
                 <TextField
                   name="ratingCount"
                   label="Rating Count"
+                  type="number"
                   value={get(this.state, `${provider}Data.ratingCount`, '')}
                   onChange={(event) => this.handleProviderData(`${provider}`, event)}
                   margin="normal"
@@ -341,6 +342,7 @@ class PodcastForm extends React.Component {
                 <TextField
                   name="frequency"
                   label="Fréquence"
+                  type="number"
                   value={get(this.state, `${provider}Data.frequency`, '')}
                   onChange={(event) => this.handleProviderData(`${provider}`, event)}
                   margin="normal"
@@ -348,6 +350,7 @@ class PodcastForm extends React.Component {
                 <TextField
                   name="follower"
                   label="Followers"
+                  type="number"
                   value={get(this.state, `${provider}Data.follower`, '')}
                   onChange={(event) => this.handleProviderData(`${provider}`, event)}
                   margin="normal"

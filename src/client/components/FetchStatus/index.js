@@ -28,8 +28,6 @@ class FetchStatus extends React.Component {
       promise,
     } = this.props
 
-    // console.log(promise)
-
     if (promise === {}) {
       body = <span />
     }
