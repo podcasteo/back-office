@@ -20,12 +20,12 @@ import Button from 'material-ui/core/Button'
 import MenuItem from 'material-ui/core/MenuItem'
 import IconButton from 'material-ui/core/IconButton'
 import Snackbar from 'material-ui/core/Snackbar'
+import Divider from 'material-ui/core/Divider'
 import CloseIcon from 'material-ui/icons/Close'
 
 const providersList = [
   'twitter',
   'facebook',
-  'youtube',
   'itunes',
   'animateur',
 ]
@@ -91,6 +91,12 @@ const LineForm = styled.div`
     align-items: center;
   }
 `
+const HeaderProviderData = styled.div`
+  &&{
+    display:flex;
+    align-items: center;
+  }
+`
 const MargedTextField = styled(TextField)`
   &&{
     margin-left:15px;
@@ -123,13 +129,30 @@ class PodcastForm extends React.Component {
     return {
       ...podcast,
       open: false,
+      errorField: {
+        name: false,
+        slug: false,
+        itunes: {
+          url: false,
+          slug: false,
+        },
+        twitter: {
+          url: false,
+          slug: false,
+        },
+        animateur: {
+          url: false,
+          slug: false,
+        },
+        facebook: {
+          url: false,
+          slug: false,
+        },
+      },
       itunesData: find(get(podcast, 'itunes.data', []), (data) => data.date === firstDay) || {
         date: firstDay,
       },
       twitterData: find(get(podcast, 'twitter.data', []), (data) => data.date === firstDay) || {
-        date: firstDay,
-      },
-      youtubeData: find(get(podcast, 'youtube.data', []), (data) => data.date === firstDay) || {
         date: firstDay,
       },
       animateurData: find(get(podcast, 'animateur.data', []), (data) => data.date === firstDay) || {
@@ -157,9 +180,6 @@ class PodcastForm extends React.Component {
       twitterData: find(get(podcast, 'twitter.data', []), (data) => data.date === firstDay) || {
         date: firstDay,
       },
-      youtubeData: find(get(podcast, 'youtube.data', []), (data) => data.date === firstDay) || {
-        date: firstDay,
-      },
       animateurData: find(get(podcast, 'animateur.data', []), (data) => data.date === firstDay) || {
         date: firstDay,
       },
@@ -176,6 +196,17 @@ class PodcastForm extends React.Component {
   }
 
   handleChange = (event) => {
+    const splited = event.target.name.split('.')
+
+    if (splited.length === 2) {
+      const provider = this.state[splited[0]]
+
+      provider[splited[1]] = event.target.value
+      this.setState({
+        [splited[0]]: provider,
+      })
+    }
+
     this.setState({
       [event.target.name]: event.target.value,
     })
@@ -225,6 +256,30 @@ class PodcastForm extends React.Component {
     const providerData = get(this.state, `${provider}Data`, {})
     const oldDataIndex = findIndex(get(this.state, `${provider}.data`, []), (data) => data.date === providerData.date)
 
+    console.log(provider, this.state[provider])
+
+    if (this.state[provider].url === '' || this.state[provider].slug === '') {
+      this.setState({
+        errorField: {
+          [provider]: {
+            url: this.state[provider].url === '',
+            slug: this.state[provider].slug === '',
+          },
+        },
+      })
+
+      return
+    }
+
+    this.setState({
+      errorField: {
+        [provider]: {
+          url: false,
+          slug: false,
+        },
+      },
+    })
+
     if (oldDataIndex > -1) {
       providerDataArray[oldDataIndex] = providerData
     } else {
@@ -252,12 +307,29 @@ class PodcastForm extends React.Component {
       updatePodcast,
     } = this.props
 
+    if (podcast.name === '' || podcast.slug === '') {
+      this.setState({
+        errorField: {
+          name: podcast.name === '',
+          slug: podcast.slug === '',
+        },
+      })
+
+      return
+    }
+
+    this.setState({
+      errorField: {
+        name: false,
+        slug: false,
+      },
+    })
     providersList.forEach((value) => {
       delete podcast[`${value}Data`]
 
-      if (podcast[`${value}`]) {
-        podcast[`${value}`].id = podcast[`${value}`]._id // eslint-disable-line
-        delete podcast[`${value}`]._id // eslint-disable-line
+      if (podcast[value]) {
+        podcast[value].id = podcast[value]._id // eslint-disable-line
+        delete podcast[value]._id // eslint-disable-line
         podcast[value].data.forEach((data) => {
           if (data._id) { // eslint-disable-line
             data.id = data._id // eslint-disable-line
@@ -268,6 +340,7 @@ class PodcastForm extends React.Component {
     })
 
     delete podcast.open
+    delete podcast.errorField
     delete podcast.uuid
 
     podcast.id = podcast._id // eslint-disable-line
@@ -291,6 +364,8 @@ class PodcastForm extends React.Component {
               <FormGroup>
                 <TextField
                   name={`${provider}.url`}
+                  required
+                  error={get(this.state.errorField, `${provider}.url`, false)}
                   fullWidth
                   label="URL"
                   value={get(this.state, `${provider}.url`, '')}
@@ -299,6 +374,8 @@ class PodcastForm extends React.Component {
                 />
                 <TextField
                   name={`${provider}.slug`}
+                  required
+                  error={get(this.state.errorField, `${provider}.slug`, false)}
                   fullWidth
                   label="Slug"
                   value={get(this.state, `${provider}.slug`, '')}
@@ -306,14 +383,20 @@ class PodcastForm extends React.Component {
                   margin="normal"
                 />
               </FormGroup>
-              <TextField
-                name="date"
-                label="Date"
-                type="date"
-                value={get(this.state, `${provider}Data.date`, getFirstDay().toISOString()).split('T')[0]}
-                onChange={(event) => this.handleProviderDataDate(`${provider}`, event)}
-                margin="normal"
-              />
+              <Divider />
+              <HeaderProviderData>
+                <TextField
+                  name="date"
+                  label="Date"
+                  type="date"
+                  value={get(this.state, `${provider}Data.date`, getFirstDay().toISOString()).split('T')[0]}
+                  onChange={(event) => this.handleProviderDataDate(`${provider}`, event)}
+                  margin="normal"
+                />
+                <Typography>
+                  Selectionner la date pour l&#39;enregistrement de la donnée provider
+                </Typography>
+              </HeaderProviderData>
               <LineForm>
                 <TextField
                   name="lastRelease"
@@ -381,7 +464,7 @@ class PodcastForm extends React.Component {
             <Typography
               variant="title"
             >
-              Information générale
+              Informations générales
             </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
@@ -389,6 +472,7 @@ class PodcastForm extends React.Component {
               <FormGroup>
                 <TextField
                   fullwidth="true"
+                  error={get(this.state.errorField, 'name', false)}
                   name="name"
                   label="Nom"
                   value={this.state.name}
@@ -400,6 +484,7 @@ class PodcastForm extends React.Component {
                 <TextField
                   name="slug"
                   label="Slug"
+                  error={get(this.state.errorField, 'slug', false)}
                   value={this.state.slug}
                   onChange={this.handleChange}
                   fullWidth
@@ -453,6 +538,7 @@ class PodcastForm extends React.Component {
                       checked={this.state.haveWomen}
                       onChange={() => this.handleCheck('haveWomen')}
                       value="haveWomen"
+                      color="primary"
                     />
                   }
                   label="Femme dans le podcast"

@@ -89,7 +89,7 @@ class TrainingForm extends React.Component {
           <Typography
             variant="title"
           >
-            Information générale
+            Informations générales
           </Typography>
           <FormGroup>
             <TextField
