@@ -45,7 +45,7 @@ class TablePaginationActions extends React.Component {
       theme,
     } = this.props
 
-    console.log(this.props)
+    // console.log(this.props)
 
     return (
       <PaginationDiv>

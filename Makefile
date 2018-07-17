@@ -45,7 +45,7 @@ start-server: ##@pm2 Start this application
 	@$(NODE_MODULES_BIN)/pm2 start pm2.yml
 
 start-server-debug: ##@pm2 Start this application
-	@DEBUG=podcasteo:* DEBUG_HIDE_DATE=true DEBUG_COLORS=true $(NODE_MODULES_BIN)/pm2-dev start pm2.yml
+	@DEBUG=podcasteo:* DEBUG_HIDE_DATE=true DEBUG_COLORS=true $(NODE_MODULES_BIN)/pm2-runtime start pm2.yml
 
 start: ##@webapp Start everything
 	@make start-server

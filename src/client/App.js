@@ -31,14 +31,6 @@ class App extends React.Component {
     route: PropTypes.object.isRequired,
   }
 
-  componentDidMount() {
-    const jssStyles = document.getElementById('jss-server-side')
-
-    if (jssStyles && jssStyles.parentNode) {
-      jssStyles.parentNode.removeChild(jssStyles)
-    }
-  }
-
   render() {
     return (
       <div className="app-wrapper">

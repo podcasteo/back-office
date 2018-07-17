@@ -115,7 +115,7 @@ class PodcastForm extends React.Component {
     updatePodcastPromise: PropTypes.object.isRequired,
   }
 
-  static getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps(props, state) { // eslint-disable-line
     const today = new Date()
     const firstDay = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1)).toISOString()
     const podcast = get(props, 'podcast', {})
@@ -148,7 +148,7 @@ class PodcastForm extends React.Component {
     const firstDay = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1)).toISOString()
     const podcast = get(props, 'podcast', {})
 
-    console.log('constructor')
+    // console.log('constructor')
     this.state = {
       ...podcast,
       open: false,

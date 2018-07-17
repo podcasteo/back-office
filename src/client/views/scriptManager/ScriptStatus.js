@@ -33,7 +33,7 @@ class ScriptStatus extends React.Component {
       promise,
     } = this.props
 
-    console.log(promise)
+    // console.log(promise)
 
     if (promise === {}) {
       body = <span />

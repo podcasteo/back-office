@@ -14,16 +14,16 @@ export default ({
       ${helmet.meta.toString()}
       ${helmet.link.toString()}
       ${style.styledComponents}
+      <style id="jss-server-side">${style.materialUI}</style>
     </head>
     <body ${helmet.bodyAttributes.toString()} >
       <div id="app">${html}</div>
-      <style id="jss-server-side">${style.materialUI}</style>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
       <script>
         window.__INIT_DATA_FROM_SERVER_RENDER__ = ${JSON.stringify(data)};
       </script>
-      <script src="/bundles/index.js"></script>
+      <script src="/index.js"></script>
     </body>
   </html>
 `

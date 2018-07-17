@@ -2,8 +2,6 @@
 import 'babel-polyfill'
 import 'isomorphic-fetch'
 
-console.log(fetch)
-
 import path from 'path'
 
 import asciify from 'asciify'
@@ -27,7 +25,7 @@ app.use(helmet())
 
 app.use(favicon(path.join(__dirname, '../static/favicon.ico')))
 app.use('/', express.static(path.join(__dirname, '../static')))
-app.use('/bundles', express.static(path.join(__dirname, '../../dist/bundles')))
+app.use('/', express.static(path.join(__dirname, '../../dist/bundles')))
 
 app.use((req, res, next) => {
   res.setHeader('Content-Type', 'text/html')
